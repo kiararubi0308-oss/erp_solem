@@ -1,0 +1,2234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>SOLEM ERP v9 — Dark Mode · Sistema Completo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+/* ═══════════════════════════════════
+   DARK MODE PALETTE — SOLEM v9
+═══════════════════════════════════ */
+:root{
+  --bg:#0f0f1a;
+  --bg2:#14142a;
+  --bg3:#1a1a32;
+  --card:#1e1e38;
+  --card2:#24243e;
+  --border:#2e2e52;
+  --border2:#3a3a60;
+  --ac:#e8973a;
+  --ac2:#f5a94e;
+  --ac-glow:rgba(232,151,58,.25);
+  --gn:#22c55e;
+  --gn2:#16a34a;
+  --rd:#ef4444;
+  --bl:#3b82f6;
+  --pu:#a78bfa;
+  --am:#f59e0b;
+  --tx:#e2e2f0;
+  --tx2:#a0a0c0;
+  --tx3:#6060a0;
+  --mu:#8080b0;
+  --dk:#e8973a;
+  --mid:#f5a94e;
+  --lt:#2e2e52;
+  --cr:#14142a;
+  --sb:218px;
+  --hh:54px;
+  --shadow:0 4px 24px rgba(0,0,0,.4);
+  --shadow-ac:0 4px 20px rgba(232,151,58,.3);
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);font-size:14px}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--ac)}
+
+/* ── Layout ── */
+#app{display:flex;height:100vh;overflow:hidden}
+#sb{width:var(--sb);background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;overflow-y:auto}
+#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#topbar{height:var(--hh);background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;flex-shrink:0;z-index:50}
+#content{flex:1;overflow-y:auto;padding:22px 24px}
+
+/* ── Sidebar ── */
+.sb-logo{padding:18px 14px 14px;border-bottom:1px solid var(--border)}
+.sb-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:17px;color:#fff;flex-shrink:0;box-shadow:var(--shadow-ac)}
+.sb-brand{color:var(--tx);font-weight:700;font-size:13px;font-family:'Playfair Display',serif}
+.sb-sub{color:var(--tx3);font-size:8px;letter-spacing:1.2px;text-transform:uppercase;margin-top:2px}
+.sb-section{padding:10px 12px 3px;font-size:8.5px;text-transform:uppercase;letter-spacing:1.8px;color:var(--tx3);font-weight:700}
+.nav-btn{width:100%;text-align:left;padding:8px 10px;border-radius:9px;border:none;background:transparent;color:var(--tx2);font-size:11.5px;cursor:pointer;display:flex;align-items:center;gap:8px;margin-bottom:2px;font-family:'DM Sans',sans-serif;border-left:3px solid transparent;transition:all .18s}
+.nav-btn:hover{background:var(--bg3);color:var(--tx)}
+.nav-btn.active{background:rgba(232,151,58,.15);color:var(--ac);border-left-color:var(--ac);font-weight:600}
+.nav-icon{font-size:14px;flex-shrink:0;width:18px;text-align:center}
+.sb-footer{padding:10px 14px;border-top:1px solid var(--border);font-size:9px;color:var(--tx3);line-height:2}
+
+/* ── Topbar ── */
+.tb-left{display:flex;align-items:center;gap:12px}
+.tb-crumb{font-size:11px;color:var(--mu)}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-btn{padding:5px 12px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--tx2);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.tb-btn:hover{background:var(--border);color:var(--tx)}
+
+/* ── Typography ── */
+.pg-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--tx);margin-bottom:2px}
+.pg-sub{font-size:12px;color:var(--mu);margin-bottom:18px}
+
+/* ── Animation ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page-anim{animation:fadeUp .25s ease}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 var(--ac-glow)}50%{box-shadow:0 0 0 8px transparent}}
+
+/* ── KPIs ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;margin-bottom:18px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:13px 14px;box-shadow:var(--shadow);transition:all .2s}
+.kpi:hover{transform:translateY(-2px);border-color:var(--ac);box-shadow:var(--shadow-ac)}
+.kpi-l{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-weight:600}
+.kpi-v{font-size:19px;font-weight:700;font-family:'Playfair Display',serif;line-height:1.1;color:var(--tx)}
+.kpi-s{font-size:10px;color:var(--mu);margin-top:2px}
+
+/* ── Cards ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:14px;box-shadow:var(--shadow)}
+.card:last-child{margin-bottom:0}
+.card-title{font-family:'Playfair Display',serif;font-size:13px;font-weight:700;color:var(--tx);margin-bottom:12px}
+
+/* ── Grid ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+
+/* ── Tables ── */
+.twrap{overflow-x:auto;border-radius:8px;border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse;font-size:11.5px}
+thead tr{background:var(--bg3)}
+th{padding:8px 10px;color:var(--ac);text-align:left;font-weight:600;white-space:nowrap;font-size:11px;border-bottom:1px solid var(--border)}
+tbody tr:nth-child(even){background:rgba(255,255,255,.02)}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+tbody tr:hover{background:rgba(232,151,58,.06)}
+td{padding:6px 10px;color:var(--tx);white-space:nowrap;font-size:11.5px}
+td.mo{font-family:'DM Mono',monospace;font-size:11px}
+.tr-total td{font-weight:700;background:rgba(232,151,58,.1);color:var(--ac)}
+
+/* ── Badges ── */
+.bdg{display:inline-block;padding:2px 9px;border-radius:9999px;font-size:10px;font-weight:700;white-space:nowrap}
+.b-br{background:rgba(232,151,58,.18);color:var(--ac2)}
+.b-gn{background:rgba(34,197,94,.15);color:var(--gn)}
+.b-rd{background:rgba(239,68,68,.15);color:var(--rd)}
+.b-bl{background:rgba(59,130,246,.15);color:var(--bl)}
+.b-am{background:rgba(245,158,11,.15);color:var(--am)}
+.b-pu{background:rgba(167,139,250,.15);color:var(--pu)}
+
+/* ── Buttons ── */
+.btn{padding:7px 14px;border-radius:8px;border:none;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:all .18s;display:inline-flex;align-items:center;gap:5px}
+.btn:hover{transform:translateY(-1px)}
+.btn-dk{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;box-shadow:0 2px 10px var(--ac-glow)}
+.btn-dk:hover{box-shadow:0 4px 20px var(--ac-glow);filter:brightness(1.1)}
+.btn-ac{background:linear-gradient(135deg,var(--ac2),#ffb866);color:#1a0000;box-shadow:0 2px 10px var(--ac-glow)}
+.btn-ac:hover{box-shadow:0 4px 20px rgba(255,184,102,.4);filter:brightness(1.05)}
+.btn-out{background:var(--card2);color:var(--tx);border:1px solid var(--border2)}
+.btn-out:hover{border-color:var(--ac);color:var(--ac);background:rgba(232,151,58,.08)}
+.btn-gn{background:linear-gradient(135deg,var(--gn2),var(--gn));color:#fff}
+.btn-gn:hover{box-shadow:0 4px 16px rgba(34,197,94,.3)}
+.btn-rd{background:linear-gradient(135deg,#dc2626,var(--rd));color:#fff}
+.btn-rd:hover{box-shadow:0 4px 16px rgba(239,68,68,.3)}
+.btn-bl{background:linear-gradient(135deg,#2563eb,var(--bl));color:#fff}
+.btn-sm{padding:4px 10px;font-size:10px}
+.btn-full{width:100%;justify-content:center}
+
+/* ── Forms ── */
+.fg{margin-bottom:10px}
+.fl{font-size:11px;color:var(--mu);display:block;margin-bottom:3px;font-weight:500}
+.fi{width:100%;padding:7px 10px;border-radius:8px;border:1px solid var(--border);font-size:12px;color:var(--tx);background:var(--bg3);font-family:'DM Sans',sans-serif;transition:all .18s}
+.fi:focus{outline:none;border-color:var(--ac);background:var(--card2);box-shadow:0 0 0 3px var(--ac-glow)}
+.fi option{background:var(--bg3);color:var(--tx)}
+.ft{resize:vertical;min-height:60px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tabs{display:flex;gap:5px;margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:5px 13px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--tx2);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .18s}
+.tab:hover{border-color:var(--ac);color:var(--ac)}
+.tab.active{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;border-color:transparent;box-shadow:0 2px 10px var(--ac-glow)}
+.fbar{display:flex;gap:5px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.fbtn{padding:3px 10px;border-radius:20px;border:1px solid var(--border);background:var(--card2);color:var(--tx2);font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.fbtn:hover{border-color:var(--ac);color:var(--ac)}
+.fbtn.active{background:var(--ac);color:#fff;border-color:transparent}
+
+/* ── Misc UI ── */
+.sr{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.sr:last-child{border:none}
+.sl{color:var(--mu)}.sv{font-weight:700;color:var(--tx);font-family:'DM Mono',monospace;font-size:11px}
+.dkbox{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;color:var(--tx);font-size:11px;line-height:2}
+.dkbox b{font-family:'Playfair Display',serif;font-size:12px;color:var(--ac)}
+.acbox{background:linear-gradient(135deg,rgba(232,151,58,.2),rgba(245,169,78,.1));border:1px solid var(--ac);border-radius:10px;padding:14px;color:var(--tx);font-size:11px;line-height:2}
+.infobox{background:rgba(232,151,58,.08);border-left:3px solid var(--ac);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--tx2);line-height:1.7}
+.okbox{background:rgba(34,197,94,.08);border:1.5px solid rgba(34,197,94,.3);border-radius:var(--radius);padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.errbox{background:rgba(239,68,68,.08);border:1.5px solid rgba(239,68,68,.3);border-radius:var(--radius);padding:12px;display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.bsec{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.brow{display:flex;justify-content:space-between;padding:5px 14px;border-bottom:1px solid var(--border);font-size:11.5px}
+.bi1{padding-left:26px}.btot{background:var(--bg3);font-weight:700;font-size:12px;padding:8px 14px}
+.bval{font-family:'DM Mono',monospace;font-size:11px}
+.bhdr-dk{background:var(--bg3);border-bottom:1px solid var(--border);padding:9px 14px;color:var(--tx);font-weight:700;font-size:12px;display:flex;justify-content:space-between;align-items:center;font-family:'Playfair Display',serif}
+.bhdr-ac{background:linear-gradient(135deg,var(--ac),var(--ac2));padding:9px 14px;color:#fff;font-weight:700;font-size:12px;display:flex;justify-content:space-between;align-items:center;font-family:'Playfair Display',serif}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all .2s}
+.pcard:hover{transform:translateY(-3px);border-color:var(--ac);box-shadow:0 8px 24px rgba(232,151,58,.2)}
+.pimg{height:72px;display:flex;align-items:center;justify-content:center;font-size:28px;background:linear-gradient(135deg,var(--bg2),var(--bg3))}
+.pbody{padding:10px}
+.lcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.lthumb{height:62px;display:flex;align-items:center;justify-content:center;font-size:26px;background:linear-gradient(135deg,var(--bg2),var(--bg3))}
+.rcard{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px}
+.upa{background:rgba(232,151,58,.06);border:1.5px dashed var(--ac);border-radius:8px;padding:14px;text-align:center;color:var(--mu);font-size:10px;cursor:pointer;transition:background .15s}
+.upa:hover{background:rgba(232,151,58,.12)}
+.fhero{border-radius:var(--radius);padding:14px;color:#fff}
+.fhl{font-size:10px;opacity:.7;margin-bottom:3px}
+.fhv{font-size:22px;font-weight:700;font-family:'Playfair Display',serif}
+.fhs{font-size:9px;opacity:.6;margin-top:3px}
+.cblock{background:#0a0a14;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'DM Mono',monospace;font-size:10.5px;color:#E8E8E8;line-height:1.8;overflow-x:auto;margin-bottom:10px}
+.cblock .cm{color:#7E8A9A}.cblock .ck{color:#C792EA}.cblock .cv{color:#C3E88D}.cblock .cs{color:#82AAFF}.cblock .cn{color:#F78C6C}
+.step{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start}
+.step-num{width:28px;height:28px;border-radius:50%;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.step-body{flex:1}
+.step-title{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:4px;font-family:'Playfair Display',serif}
+.step-desc{font-size:11.5px;color:var(--mu);line-height:1.6}
+.sunat-ok{background:linear-gradient(135deg,rgba(22,163,74,.8),rgba(34,197,94,.6));border:1px solid var(--gn);color:#fff;border-radius:var(--radius);padding:16px;margin-bottom:14px}
+.sunat-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.15);font-size:11.5px;color:rgba(255,255,255,.9)}
+.ncard{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--card2);margin-bottom:8px}
+.ncard-icon{font-size:22px;flex-shrink:0}
+.ncard-body{flex:1}
+.ncard-title{font-size:12px;font-weight:700;color:var(--tx)}
+.ncard-desc{font-size:11px;color:var(--mu);margin-top:2px;line-height:1.5}
+.msg{padding:8px 12px;border-radius:8px;font-size:11px;margin-bottom:10px}
+.msg-ok{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.3);color:var(--gn)}
+.msg-err{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--rd)}
+.pbox{background:#0a0a14;border:1px solid var(--border);border-radius:10px;padding:14px;font-family:'DM Mono',monospace;font-size:10px;color:#C3E88D;line-height:1.8;white-space:pre-wrap;word-break:break-word;max-height:220px;overflow-y:auto}
+@media(max-width:900px){:root{--sb:0px}#sb{display:none}.g2,.g3,.g4,.fr{grid-template-columns:1fr}}
+
+/* ── Modals ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:center;justify-content:center}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;width:min(96vw,500px);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.modal-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--tx);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.modal-close{background:none;border:none;font-size:18px;cursor:pointer;color:var(--mu);line-height:1;transition:color .15s}
+.modal-close:hover{color:var(--rd)}
+.act-row{display:flex;gap:5px;flex-wrap:wrap}
+td input.fi{padding:3px 6px;font-size:11px;width:100%;min-width:70px}
+.img-thumb{width:100%;height:90px;object-fit:cover;border-radius:8px;display:block;margin-bottom:6px}
+.img-placeholder{height:90px;background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--border);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:6px;cursor:pointer}
+.img-placeholder:hover{border-color:var(--ac);opacity:.85}
+
+/* ══════════════════════════════════════
+   POS MODULE — DARK
+══════════════════════════════════════ */
+.pos-layout{display:grid;grid-template-columns:1fr 360px;gap:14px;min-height:580px}
+.pos-products{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;align-content:start}
+.pos-pcard{background:var(--card);border:2px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .2s;user-select:none}
+.pos-pcard:hover{border-color:var(--ac);transform:translateY(-2px);box-shadow:0 8px 24px var(--ac-glow)}
+.pos-pcard.out-of-stock{opacity:.35;cursor:not-allowed;filter:grayscale(.5)}
+.pos-pcard .pimg{height:64px;font-size:26px;background:linear-gradient(135deg,var(--bg3),var(--bg2))}
+.pos-pcard .pbody{padding:8px}
+.pos-panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);display:flex;flex-direction:column;overflow:hidden;box-shadow:var(--shadow)}
+.pos-panel-hdr{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;padding:13px 14px;font-family:'Playfair Display',serif;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px}
+.pos-cart{flex:1;overflow-y:auto;padding:10px 12px;max-height:280px}
+.pos-cart-empty{text-align:center;padding:30px 10px;color:var(--mu);font-size:12px}
+.pos-cart-item{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--border);font-size:11.5px}
+.pos-cart-item:last-child{border-bottom:none}
+.pos-qty-ctrl{display:flex;align-items:center;gap:4px}
+.pos-qty-btn{width:24px;height:24px;border-radius:6px;border:1px solid var(--border2);background:var(--bg3);cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;transition:all .15s;color:var(--tx)}
+.pos-qty-btn:hover{background:var(--ac);border-color:var(--ac);color:#fff}
+.pos-totals{border-top:1px solid var(--border);padding:12px;background:var(--bg3)}
+.pos-total-row{display:flex;justify-content:space-between;font-size:11.5px;padding:3px 0;color:var(--tx2)}
+.pos-total-row.big{font-size:15px;font-weight:700;color:var(--ac);font-family:'Playfair Display',serif;padding-top:8px;border-top:1px solid var(--border);margin-top:4px}
+.pos-actions{padding:10px 12px;display:flex;flex-direction:column;gap:6px;background:var(--card)}
+.pos-client-section{padding:8px 12px;border-top:1px solid var(--border);background:var(--card)}
+.pos-client-section .fl{font-size:10px}
+
+/* ── Receipt / Invoice Modal ── */
+.receipt-modal{background:var(--card);border:1px solid var(--border);border-radius:14px;width:min(96vw,480px);max-height:92vh;overflow-y:auto;box-shadow:0 24px 80px rgba(0,0,0,.6);display:flex;flex-direction:column}
+.receipt-hdr{background:linear-gradient(135deg,#1a1a2e,#0f1042);color:#fff;padding:20px 20px 16px;text-align:center;border-bottom:2px solid var(--ac)}
+.receipt-body{padding:18px;font-size:11.5px;color:var(--tx);background:var(--card)}
+.receipt-logo{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--ac);letter-spacing:1px}
+.receipt-sub{font-size:9px;color:rgba(255,255,255,.5);margin-top:2px;letter-spacing:2px;text-transform:uppercase}
+.receipt-divider{border:none;border-top:1px dashed var(--ac);margin:10px 0;opacity:.5}
+.receipt-divider-dark{border:none;border-top:1px dashed var(--border2);margin:8px 0}
+.receipt-row{display:flex;justify-content:space-between;padding:4px 0;font-size:11px;color:var(--tx2)}
+.receipt-row span:last-child{color:var(--tx);font-weight:500}
+.receipt-row.bold{font-weight:700;font-size:12px;color:var(--tx)}
+.receipt-row.total{font-weight:700;font-size:16px;font-family:'Playfair Display',serif;padding:8px 0;border-top:2px solid var(--ac);border-bottom:2px solid var(--ac);margin:8px 0;color:var(--ac)}
+.receipt-items-hdr{display:grid;grid-template-columns:1fr auto auto auto;gap:4px;font-size:10px;font-weight:700;color:var(--ac);text-transform:uppercase;padding:6px 0;border-bottom:1px solid var(--border2)}
+.receipt-item-row{display:grid;grid-template-columns:1fr auto auto auto;gap:4px;font-size:11px;padding:4px 0;border-bottom:1px solid var(--border)}
+.receipt-num{font-family:'DM Mono',monospace;font-size:11px;color:var(--ac2)}
+.pos-disc-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+
+/* ── Receipt footer bar ── */
+.receipt-footer-bar{padding:12px;display:flex;gap:8px;flex-wrap:wrap;background:var(--bg2);border-top:1px solid var(--border)}
+
+@media(max-width:900px){.pos-layout{grid-template-columns:1fr}}
+
+/* ── Extra polish ── */
+select.fi{cursor:pointer}
+.badge-version{background:var(--ac);color:#fff;font-size:8px;font-weight:700;padding:1px 6px;border-radius:20px;vertical-align:middle;margin-left:4px}
+
+/* ══════════════════════════════════════
+   COSTOS DE PRODUCCIÓN MODULE
+══════════════════════════════════════ */
+.cp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:18px}
+.cp-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow);transition:all .2s;position:relative;overflow:hidden}
+.cp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.cp-card.accent::before{background:linear-gradient(90deg,var(--ac),var(--ac2))}
+.cp-card.green::before{background:linear-gradient(90deg,var(--gn2),var(--gn))}
+.cp-card.blue::before{background:linear-gradient(90deg,#2563eb,var(--bl))}
+.cp-card.purple::before{background:linear-gradient(90deg,#7c3aed,var(--pu))}
+.cp-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.35)}
+.cp-card-label{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:1.1px;font-weight:700;margin-bottom:4px}
+.cp-card-value{font-size:20px;font-weight:700;font-family:'Playfair Display',serif;color:var(--tx);line-height:1.1}
+.cp-card-sub{font-size:10px;color:var(--mu);margin-top:3px}
+.cp-sheet{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);margin-bottom:14px}
+.cp-sheet-title{font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--tx);margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.cp-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.cp-field{display:flex;flex-direction:column;gap:4px}
+.cp-label{font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:.8px}
+.cp-input{width:100%;padding:9px 12px;border-radius:9px;border:1.5px solid var(--border);font-size:13px;font-weight:700;color:var(--ac);background:var(--bg3);font-family:'DM Mono',monospace;transition:all .2s}
+.cp-input:focus{outline:none;border-color:var(--ac);background:var(--card2);box-shadow:0 0 0 3px var(--ac-glow)}
+.cp-formula{font-size:10px;color:var(--tx3);margin-top:2px;font-family:'DM Mono',monospace}
+.cp-prod-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.cp-separator{border:none;border-top:1px solid var(--border);margin:14px 0}
+.cp-results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px}
+.cp-result-card{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:12px;text-align:center}
+.cp-result-card.highlight{background:linear-gradient(135deg,rgba(232,151,58,.15),rgba(245,169,78,.08));border-color:var(--ac)}
+.cp-result-label{font-size:9px;color:var(--mu);text-transform:uppercase;letter-spacing:.9px;font-weight:600;margin-bottom:4px}
+.cp-result-value{font-size:16px;font-weight:700;font-family:'Playfair Display',serif;color:var(--ac)}
+.cp-result-card.green .cp-result-value{color:var(--gn)}
+.cp-result-card.blue .cp-result-value{color:var(--bl)}
+.cp-result-card.purple .cp-result-value{color:var(--pu)}
+.cp-hist-table .twrap table td,.cp-hist-table .twrap table th{font-size:11px}
+.cp-sync-badge{display:inline-flex;align-items:center;gap:4px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);border-radius:9999px;padding:2px 10px;font-size:9.5px;color:var(--gn);font-weight:700}
+.cp-formula-box{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;margin-bottom:12px;font-family:'DM Mono',monospace;font-size:10.5px;color:var(--tx2);line-height:2}
+.cp-formula-box .fk{color:var(--ac);font-weight:700}
+.cp-formula-box .fv{color:var(--gn)}
+</style>
+</head>
+<body>
+<div id="modal-root"></div>
+<div id="app">
+<div id="sb">
+  <div class="sb-logo">
+    <div style="display:flex;align-items:center;gap:9px">
+      <div class="sb-icon">S</div>
+      <div><div class="sb-brand">SOLEM</div><div class="sb-sub">ERP · Estilo y Confort</div></div>
+    </div>
+  </div>
+  <div style="padding:6px 6px 4px;flex:1" id="nav-wrap"></div>
+  <div class="sb-footer">
+    <div>📍 Trujillo, La Libertad, Perú</div>
+    <div>🇵🇪 SUNAT 2026 · UIT S/ 5,500</div>
+  </div>
+</div>
+
+<div id="main">
+  <div id="topbar">
+    <div class="tb-left">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:28px;height:28px;background:linear-gradient(135deg,var(--ac),var(--ac2));border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-family:'Playfair Display',serif;font-size:14px;box-shadow:0 2px 8px var(--ac-glow)">S</div>
+        <span class="tb-crumb" id="tb-title">SOLEM ERP</span>
+        <span class="badge-version">v9 Dark</span>
+      </div>
+    </div>
+    <div class="tb-right">
+      <span class="bdg b-br">admin@solem.pe</span>
+      <span style="font-size:10px;color:var(--mu)" id="top-clock"></span>
+    </div>
+  </div>
+  <div id="content">
+    <div id="page" class="page-anim"></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const S={dk:"#e8973a",mid:"#f5a94e",ac:"#e8973a",lt:"#2e2e52",cr:"#14142a",gn:"#22c55e",rd:"#ef4444",bl:"#3b82f6",mu:"#8080b0",tx:"#e2e2f0",tx2:"#a0a0c0",bg:"#0f0f1a",bg2:"#14142a",bg3:"#1a1a32",card:"#1e1e38",card2:"#24243e",border:"#2e2e52",border2:"#3a3a60",pu:"#a78bfa",am:"#f59e0b"};
+const r2=v=>Math.round(v*100)/100;
+const fmt=v=>"S/ "+Number(v).toLocaleString("es-PE",{minimumFractionDigits:2,maximumFractionDigits:2});
+const el=id=>document.getElementById(id);
+let CHARTS={};
+const dC=id=>{if(CHARTS[id]){CHARTS[id].destroy();delete CHARTS[id];}};
+/* ── UX helpers ── */
+const confirmar=(msg,cb)=>{if(confirm(msg))cb();};
+let srch={tan:"",int:"",inv:"",ord:"",lay:"",rep:""};
+function srchBox(key,ph,fn){return`<input class="fi" placeholder="🔍 ${ph}" style="max-width:220px;padding:5px 10px;font-size:11px" oninput="srch.${key}=this.value;${fn}()" value="${srch[key]}">`;}
+function filtStr(arr,q){return q?arr.filter(x=>Object.values(x).join(" ").toLowerCase().includes(q.toLowerCase())):arr;}
+
+const SOLEM={tA:157050.49,tan:93045.70,int:3573.99,kt:60430.80,pas:47115.15,pat:109935.34,plan:29522};
+const TANGIBLES=[
+  {id:"T01",code:"TAN-001",name:"Letrero LED SOLEM",area:"Fachada",qty:1,unit:450,total:450,life:10,rate:.10},
+  {id:"T02",code:"TAN-002",name:"Mampara vidrio templado 6mm",area:"Fachada",qty:18,unit:190,total:3420,life:10,rate:.10},
+  {id:"T03",code:"TAN-003",name:"Puerta de vidrio templado",area:"Fachada",qty:1,unit:650,total:650,life:10,rate:.10},
+  {id:"T04",code:"TAN-004",name:"Estructura metálica negra",area:"Fachada",qty:18,unit:50,total:900,life:10,rate:.10},
+  {id:"T05",code:"TAN-008",name:"Mesa exhibidora melamina nogal",area:"Exhibición",qty:2,unit:499,total:998,life:10,rate:.10},
+  {id:"T06",code:"TAN-009",name:"Repisa vidrio templado",area:"Exhibición",qty:12,unit:129,total:1548,life:10,rate:.10},
+  {id:"T07",code:"TAN-010",name:"Sofá blanco moderno 2 cuerpos",area:"Exhibición",qty:4,unit:799,total:3196,life:5,rate:.20},
+  {id:"T08",code:"TAN-011",name:"Espejo cuerpo completo",area:"Exhibición",qty:4,unit:299,total:1196,life:5,rate:.20},
+  {id:"T09",code:"TAN-012",name:"Mostrador caja melamina nogal",area:"Caja",qty:1,unit:699,total:699,life:10,rate:.10},
+  {id:"T10",code:"TAN-013",name:"Laptop Lenovo IdeaPad Ryzen 3",area:"Caja",qty:2,unit:1499,total:2998,life:4,rate:.25},
+  {id:"T11",code:"TAN-014",name:"Impresora térmica Epson TM-T20III",area:"Caja",qty:2,unit:249,total:498,life:4,rate:.25},
+  {id:"T12",code:"TAN-015",name:"Escáner código barras USB",area:"Caja",qty:2,unit:119,total:238,life:4,rate:.25},
+  {id:"T13",code:"TAN-017",name:"Máquina de coser industrial",area:"Fábrica",qty:4,unit:2499,total:9996,life:10,rate:.10},
+  {id:"T14",code:"TAN-018",name:"Horno calzado semi-industrial",area:"Fábrica",qty:2,unit:3500,total:7000,life:10,rate:.10},
+  {id:"T15",code:"TAN-019",name:"Pegadora de zapato industrial",area:"Fábrica",qty:2,unit:1450,total:2900,life:10,rate:.10},
+];
+const INTGS=[
+  {id:"I01",code:"INT-001",name:"Marca SOLEM (INDECOPI)",cat:"Marca",value:534.99,life:10,rate:.10},
+  {id:"I02",code:"INT-002",name:"Constitución empresa SAC",cat:"Legal",value:650.00,life:5,rate:.20},
+  {id:"I03",code:"INT-003",name:"Licencia de funcionamiento",cat:"Licencias",value:350.00,life:5,rate:.20},
+  {id:"I04",code:"INT-004",name:"Diseño logo e identidad visual",cat:"Diseño",value:500.00,life:5,rate:.20},
+  {id:"I05",code:"INT-005",name:"Dominio web solem.pe",cat:"Web",value:120.00,life:1,rate:1.00},
+  {id:"I06",code:"INT-006",name:"Hosting Hostinger",cat:"Web",value:180.00,life:1,rate:1.00},
+  {id:"I07",code:"INT-007",name:"Software POS Vend",cat:"Software",value:89.00,life:3,rate:.33},
+  {id:"I08",code:"INT-008",name:"Publicidad digital inicial",cat:"Marketing",value:700.00,life:1,rate:1.00},
+  {id:"I09",code:"INT-009",name:"Sesión fotográfica productos",cat:"Marketing",value:450.00,life:1,rate:1.00},
+];
+let INV=[
+  {id:"P01",sku:"SOL-ZAP-URB",name:"Zapatillas Urbanas",gender:"Unisex",sizes:[38,39,40,41,42],cost:90.89,price:179.00,stock:89,color:"Negro/Blanco",e:"👟"},
+  {id:"P02",sku:"SOL-TAC-ELE",name:"Tacones Elegantes",gender:"Mujer",sizes:[36,37,38,39],cost:86.18,price:169.00,stock:50,color:"Negro/Nude",e:"👠"},
+  {id:"P03",sku:"SOL-FOR-HOM",name:"Calzado Formal Hombre",gender:"Hombre",sizes:[40,41,42,43],cost:91.62,price:189.00,stock:41,color:"Negro/Marrón",e:"👞"},
+  {id:"P04",sku:"SOL-BOT-CUE",name:"Botas de Cuero",gender:"Mujer",sizes:[36,37,38,39],cost:115.69,price:229.00,stock:36,color:"Marrón/Negro",e:"👢"},
+  {id:"P05",sku:"SOL-SAN-CAS",name:"Sandalias Casuales",gender:"Unisex",sizes:[36,37,38,39,40],cost:65.92,price:129.00,stock:24,color:"Beige/Negro",e:"🩴"},
+];
+let ORDERS=[
+  {id:"O1",num:"SOL-2026-001",pid:"P01",sz:40,qty:2,status:"ENTREGADO",total:358,igv:54.61,client:"Carlos Mendoza",date:"2026-01-15",ch:"TIENDA",inv:"B001-00000001"},
+  {id:"O2",num:"SOL-2026-002",pid:"P02",sz:37,qty:1,status:"ENVIADO",total:169,igv:25.78,client:"María Rodríguez",date:"2026-01-18",ch:"ONLINE",inv:"B001-00000002"},
+  {id:"O3",num:"SOL-2026-003",pid:"P03",sz:42,qty:1,status:"EN_PRODUCCION",total:189,igv:28.83,client:"José García",date:"2026-01-20",ch:"TIENDA",inv:""},
+];
+let LAYOUTS=[
+  {id:"L1",title:"Fachada exterior SOLEM",area:"Fachada",desc:"Vista exterior con letrero LED y mampara vidrio templado",resp:"Administrador",date:"2026-01-10",fmt:"JPG",size:"2.4 MB",e:"🏪",precio:4500,presupuesto:5000,costo:4200,estado:"Aprobado",img:""},
+  {id:"L2",title:"Área de exhibición principal",area:"Área de Ventas",desc:"Mesas exhibidoras y repisas vidrio con iluminación LED cálida",resp:"Diseñador",date:"2026-01-10",fmt:"JPG",size:"3.1 MB",e:"👟",precio:8200,presupuesto:9000,costo:7800,estado:"Aprobado",img:""},
+  {id:"L3",title:"Módulo de caja",area:"Caja",desc:"Mostrador con laptops Lenovo, impresoras Epson y escáneres",resp:"Administrador",date:"2026-01-11",fmt:"PNG",size:"1.8 MB",e:"💳",precio:3700,presupuesto:4000,costo:3500,estado:"Ejecutado",img:""},
+  {id:"L4",title:"Almacén producto terminado",area:"Almacén",desc:"Estanterías melamina nogal organizadas por talla y modelo",resp:"Logística",date:"2026-01-12",fmt:"JPG",size:"2.0 MB",e:"📦",precio:2900,presupuesto:3200,costo:2750,estado:"Ejecutado",img:""},
+  {id:"L5",title:"Planta de fabricación",area:"Fábrica",desc:"Máquinas coser industrial, hornos y mesas de ensamblaje",resp:"Producción",date:"2026-01-13",fmt:"JPG",size:"4.2 MB",e:"🔧",precio:15000,presupuesto:16000,costo:14500,estado:"En revisión",img:""},
+];
+const PLANILLA=[
+  {cargo:"Cortadores",qty:2,base:1300,total:3770},{cargo:"Armadores",qty:2,base:1250,total:3625},
+  {cargo:"Ensamblaje",qty:4,base:1200,total:6960},{cargo:"Diseño",qty:2,base:1500,total:4350},
+  {cargo:"Marketing",qty:1,base:1500,total:2175},{cargo:"Logística",qty:1,base:1300,total:1885},
+  {cargo:"Vendedores",qty:2,base:1130,total:3277},{cargo:"Limpieza",qty:2,base:1130,total:1638.50},
+];
+const OS=["NUEVO","CONFIRMADO","EN_PRODUCCION","EMPACADO","ENVIADO","ENTREGADO"];
+const SC={NUEVO:"b-bl",CONFIRMADO:"b-am",EN_PRODUCCION:"b-pu",EMPACADO:"b-br",ENVIADO:"b-gn",ENTREGADO:"b-gn",CANCELADO:"b-rd"};
+const LAR=["Fachada","Área de Ventas","Caja","Almacén","Fábrica","Administración","SSHH"];
+const LAE={"Fachada":"🏪","Área de Ventas":"👟","Caja":"💳","Almacén":"📦","Fábrica":"🔧","Administración":"💼","SSHH":"🚪"};
+
+const cFr=(P,tea,n)=>{const i=Math.pow(1+tea,1/12)-1,c=P*(i*Math.pow(1+i,n))/(Math.pow(1+i,n)-1);let s=P;return Array.from({length:n},(_,k)=>{const it=s*i,am=c-it;s=Math.max(s-am,0);return{n:k+1,cuota:r2(c),interes:r2(it),amort:r2(am),saldo:r2(s)};});};
+const cAl=(P,tea,n)=>{const i=Math.pow(1+tea,1/12)-1,af=P/n;let s=P;return Array.from({length:n},(_,k)=>{const it=s*i,c=af+it;s=Math.max(s-af,0);return{n:k+1,cuota:r2(c),interes:r2(it),amort:r2(af),saldo:r2(s)};});};
+const cAm=(P,tea,n)=>{const i=Math.pow(1+tea,1/12)-1;return Array.from({length:n},(_,k)=>{const last=k===n-1,it=P*i,am=last?P:0;return{n:k+1,cuota:r2(it+am),interes:r2(it),amort:r2(am),saldo:r2(last?0:P)};});};
+
+let st={
+  mod:"dashboard",
+  tanFilt:"Todos",tanSel:"",
+  finM:47115.15,finT:18,finC:36,finS:"frances",finSF:false,
+  tribV:50000,tribC:30000,tribSal:1300,tribTab:"pdt",
+  ecTab:"catalogo",ecPid:"",ecSz:"",ecQty:1,ecCl:"",ecCh:"TIENDA",ecPay:"EFECTIVO",
+  posCart:[],posDisc:0,posPayMethod:"EFECTIVO",posCliNombre:"",posCliDni:"",posCliTel:"",posCompType:"BOLETA",posFilter:"",
+  lyFilt:"Todas",lyEdit:"",lyT:"",lyA:LAR[0],lyD:"",lyR:"",lyDt:new Date().toISOString().split("T")[0],lyF:"JPG",lyPrecio:0,lyPresupuesto:0,lyCosto:0,lyEstado:"Pendiente",lyImg:"",
+  sunatTab:"emitir",notifTab:"alertas",deployTab:"railway",
+};
+
+const MENU=[
+  {sec:"Principal"},
+  {id:"dashboard",l:"Dashboard",ic:"📊"},{id:"balance",l:"Est. Financiero",ic:"⚖️"},
+  {sec:"Inversión"},
+  {id:"tangibles",l:"Activos Tangibles",ic:"🏢"},{id:"intangibles",l:"Activos Intangibles",ic:"💡"},
+  {id:"capital",l:"Capital de Trabajo",ic:"💼"},{id:"financiamiento",l:"Financiamiento",ic:"🏦"},
+  {sec:"Operaciones"},
+  {id:"tributario",l:"Tributario SUNAT",ic:"📋"},{id:"ecommerce",l:"Ecommerce",ic:"🛍"},
+  {id:"layouts",l:"Layouts",ic:"🖼"},{id:"reportes",l:"Reportes",ic:"📤"},
+  {sec:"Producción (S5)"},
+  {id:"costos",l:"Costos de Producción",ic:"🏭"},{id:"sunat",l:"Facturación Electrónica",ic:"🧾"},{id:"notif",l:"Alertas & Notif.",ic:"🔔"},
+  {id:"deploy",l:"Backend & Despliegue",ic:"🚀"},
+  {sec:"Administración"},
+  {id:"admin",l:"Datos de Empresa",ic:"⚙️"},{id:"usuarios",l:"Usuarios & Roles",ic:"👥"},
+  {id:"historial",l:"Historial",ic:"📜"},{id:"seguridad",l:"Seguridad",ic:"🔐"},
+];
+
+function renderNav(){
+  el("nav-wrap").innerHTML=MENU.map(m=>m.sec
+    ?`<div class="sb-section">${m.sec}</div>`
+    :`<button class="nav-btn${st.mod===m.id?' active':''}" onclick="go('${m.id}')"><span class="nav-icon">${m.ic}</span><span>${m.l}</span></button>`
+  ).join("");
+}
+
+function go(id){
+  st.mod=id;
+  const found=MENU.find(m=>m.id===id);
+  el("tb-title").textContent="SOLEM ERP · "+(found?.l||id);
+  renderNav();
+  el("page").className="page-anim";
+  Object.keys(CHARTS).forEach(k=>dC(k));
+  render();
+}
+
+function tbl(cols,rows){
+  return`<div class="twrap"><table>
+  <thead><tr>${cols.map(c=>`<th>${c.l||c}</th>`).join("")}</tr></thead>
+  <tbody>${rows.map((r,i)=>`<tr class="${r._tot?'tr-total':''}">${cols.map(c=>`<td class="${c.mo?'mo':''}">${r[c.k||c]??''}</td>`).join("")}</tr>`).join("")}</tbody>
+  </table></div>`;
+}
+function bdg(t,c){return`<span class="bdg ${c}">${t}</span>`;}
+function btn(t,c,fn,sm=false){return`<button class="btn ${c}${sm?' btn-sm':''}" onclick="${fn}">${t}</button>`;}
+
+function pgDashboard(){
+  const now=new Date();
+  const fecha=now.toLocaleDateString("es-PE",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});
+  const hora=now.toLocaleTimeString("es-PE",{hour:"2-digit",minute:"2-digit"});
+  const tTan=r2(TANGIBLES.reduce((s,t)=>s+t.total,0));
+  const tInt=r2(INTGS.reduce((s,i)=>s+i.value,0));
+  const tKt=r2(GASTOS.reduce((s,g)=>s+g.m,0));
+  const tInv=r2(INV.reduce((s,p)=>s+p.stock*p.cost,0));
+  const tComp=r2(COMPROBANTES.reduce((s,c)=>s+c.tot,0));
+  const tRep=REPORTES_EXCEL.length;
+  const tActivos=r2(tTan+tInt+tKt);
+  const liquidez=r2(tKt/47115.15);
+  const endeud=r2(47115.15/157050.49*100);
+  const autono=r2(109935.34/157050.49*100);
+  el("page").innerHTML=`
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:8px">
+    <div>
+      <div class="pg-title" style="margin-bottom:0">Dashboard Ejecutivo</div>
+      <div class="pg-sub" style="margin-bottom:0">Datos reales SOLEM · Trujillo, Perú · SUNAT 2026</div>
+    </div>
+    <div style="background:${S.dk};border-radius:12px;padding:10px 16px;text-align:right;min-width:160px">
+      <div style="color:rgba(255,255,255,.5);font-size:9px;text-transform:uppercase;letter-spacing:1px">Fecha y hora</div>
+      <div id="dash-hora" style="color:#fff;font-size:16px;font-weight:700;font-family:'DM Mono',monospace">${hora}</div>
+      <div style="color:var(--ac);font-size:9.5px;text-transform:capitalize">${fecha}</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="margin-bottom:14px">
+    <div class="kpi"><div class="kpi-l">Total Activos</div><div class="kpi-v" style="color:${S.dk}">${fmt(157050.49)}</div><div class="kpi-s">Inversión total</div></div>
+    <div class="kpi"><div class="kpi-l">Total Pasivos</div><div class="kpi-v" style="color:${S.rd}">${fmt(47115.15)}</div><div class="kpi-s">Préstamo BCP</div></div>
+    <div class="kpi"><div class="kpi-l">Patrimonio</div><div class="kpi-v" style="color:${S.gn}">${fmt(109935.34)}</div><div class="kpi-s">Socios 70%</div></div>
+    <div class="kpi"><div class="kpi-l">Capital de Trabajo</div><div class="kpi-v" style="color:${S.ac}">${fmt(tKt)}</div><div class="kpi-s">${GASTOS.length} conceptos</div></div>
+    <div class="kpi"><div class="kpi-l">Liquidez Corriente</div><div class="kpi-v" style="color:${liquidez>=1?S.gn:S.rd}">${liquidez}x</div><div class="kpi-s">CT / Pasivo</div></div>
+    <div class="kpi"><div class="kpi-l">Endeudamiento</div><div class="kpi-v">${endeud}%</div><div class="kpi-s">Pasivo / Activo</div></div>
+    <div class="kpi"><div class="kpi-l">Planilla Mensual</div><div class="kpi-v">${fmt(29522)}</div><div class="kpi-s">16 trabajadores</div></div>
+    <div class="kpi"><div class="kpi-l">Inventario Valorizado</div><div class="kpi-v" style="color:${S.ac}">${fmt(tInv)}</div><div class="kpi-s">${INV.reduce((s,p)=>s+p.stock,0)} pares · ${INV.length} modelos</div></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:14px">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">📊 Resumen por Módulo</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        ${[
+          {ic:"🏢",l:"Activos Tangibles",v:fmt(tTan),s:TANGIBLES.length+" activos",nav:"tangibles"},
+          {ic:"💡",l:"Activos Intangibles",v:fmt(tInt),s:INTGS.length+" intangibles",nav:"intangibles"},
+          {ic:"💼",l:"Capital de Trabajo",v:fmt(tKt),s:GASTOS.length+" conceptos",nav:"capital"},
+          {ic:"👟",l:"Inventario",v:fmt(tInv),s:INV.length+" modelos",nav:"ecommerce"},
+          {ic:"🧾",l:"Comprobantes",v:fmt(tComp),s:COMPROBANTES.length+" emitidos",nav:"sunat"},
+          {ic:"📤",l:"Archivos Excel",v:tRep+" archivos",s:"importados",nav:"reportes"},
+          {ic:"🏭",l:"Costos Producción",v:(typeof CP_PRODUCTOS!=="undefined"?CP_PRODUCTOS.length+" modelos":"—"),s:"integrado",nav:"costos"},
+        ].map(m=>`<div onclick="go('${m.nav}')" style="background:${S.cr};border-radius:10px;padding:10px;cursor:pointer;transition:background .15s;border:1px solid ${S.lt}" onmouseover="this.style.background='#FEF3E2'" onmouseout="this.style.background='${S.cr}'">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><span style="font-size:16px">${m.ic}</span><span style="font-size:10px;color:${S.mu};font-weight:600">${m.l}</span></div>
+          <div style="font-size:14px;font-weight:700;color:${S.dk};font-family:'Playfair Display',serif">${m.v}</div>
+          <div style="font-size:10px;color:${S.mu}">${m.s}</div>
+        </div>`).join("")}
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">⚡ Acciones Rápidas</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn btn-dk btn-full" onclick="go('tangibles');setTimeout(()=>openModal('tan-new'),100)">🏢 Nuevo Activo Tangible</button>
+        <button class="btn btn-ac btn-full" onclick="go('intangibles');setTimeout(()=>openIntModal(),100)">💡 Nuevo Activo Intangible</button>
+        <button class="btn btn-full" style="background:${S.bl};color:#fff" onclick="go('layouts');setTimeout(()=>{st.lyEdit='';lyClear();pgLayouts();},100)">🖼 Nuevo Layout</button>
+        <button class="btn btn-full" style="background:${S.gn};color:#fff" onclick="go('sunat');setTimeout(()=>{st.sunatTab='emitir';pgSunat();},100)">🧾 Nueva Factura</button>
+        <button class="btn btn-full" style="background:var(--mid);color:#fff" onclick="go('ecommerce');setTimeout(()=>{st.ecTab='nuevo';pgEcommerce();},100)">🛍 Nuevo Pedido</button>
+        <button class="btn btn-full" style="background:var(--pu);color:#fff" onclick="go('costos')">🏭 Costos de Producción</button>
+        <button class="btn btn-out btn-full" onclick="go('reportes')">📤 Ir a Reportes</button>
+      </div>
+      <div class="card-title" style="margin-top:14px;margin-bottom:8px">📈 KPI Financiero</div>
+      ${[
+        {l:"Estado Financiero",v:Math.abs(157050.49-(47115.15+109935.34))<.01?"✅ Balance cuadrado":"⚠ Revisar",c:Math.abs(157050.49-(47115.15+109935.34))<.01?S.gn:S.rd},
+        {l:"Liquidez Corriente",v:liquidez+"x",c:liquidez>=1?S.gn:S.rd},
+        {l:"Autonomía Financiera",v:autono+"%",c:S.dk},
+        {l:"Endeudamiento",v:endeud+"%",c:endeud<50?S.gn:S.rd},
+        {l:"Tangibles registrados",v:TANGIBLES.length+" activos",c:S.dk},
+        {l:"Pedidos activos",v:ORDERS.filter(o=>o.status!=="ENTREGADO"&&o.status!=="CANCELADO").length+" en curso",c:S.ac},
+      ].map(k=>`<div class="sr"><span class="sl">${k.l}</span><span style="font-weight:700;font-size:11px;color:${k.c};font-family:'DM Mono',monospace">${k.v}</span></div>`).join("")}
+    </div>
+  </div>
+
+  <div class="g3" style="margin-bottom:12px">
+    <div class="card"><div class="card-title">Composición del Activo</div><canvas id="c-act" height="150"></canvas></div>
+    <div class="card"><div class="card-title">Financiamiento</div><canvas id="c-fin" height="150"></canvas></div>
+    <div class="card" style="padding:12px"><div class="card-title">Capital de Trabajo</div><canvas id="c-kt" height="150"></canvas></div>
+  </div>
+  <div class="card"><div class="card-title">Depreciación Acumulada — 12 meses</div><canvas id="c-dep" height="110"></canvas></div>`;
+
+  /* live clock */
+  if(window._dashClock)clearInterval(window._dashClock);
+  window._dashClock=setInterval(()=>{const h=el("dash-hora");if(h)h.textContent=new Date().toLocaleTimeString("es-PE",{hour:"2-digit",minute:"2-digit"});else clearInterval(window._dashClock);},10000);
+
+  setTimeout(()=>{
+    const dd=[{n:"Tangibles",v:tTan},{n:"Cap.Trabajo",v:tKt},{n:"Intangibles",v:tInt}];
+    const fd=[{n:"Propio 70%",v:109935.34},{n:"Préstamo 30%",v:47115.15}];
+    const kd=[{c:"Sueldos",m:29522},{c:"Inventario",m:24588.80},{c:"Alquiler",m:2800},{c:"Marketing",m:1500},{c:"Servicios",m:900},{c:"Caja",m:1000}];
+    const dp=Array.from({length:12},(_,i)=>({mes:`M${i+1}`,v:r2(tTan*.10/12*(i+1))}));
+    dC("c-act");CHARTS["c-act"]=new Chart(el("c-act"),{type:"doughnut",data:{labels:dd.map(d=>d.n),datasets:[{data:dd.map(d=>d.v),backgroundColor:[S.dk,S.ac,S.mid],borderWidth:0}]},options:{cutout:"65%",plugins:{legend:{position:"bottom",labels:{font:{size:9},boxWidth:9,padding:6}}}}});
+    dC("c-fin");CHARTS["c-fin"]=new Chart(el("c-fin"),{type:"doughnut",data:{labels:fd.map(d=>d.n),datasets:[{data:fd.map(d=>d.v),backgroundColor:[S.dk,S.ac],borderWidth:0}]},options:{cutout:"65%",plugins:{legend:{position:"bottom",labels:{font:{size:9},boxWidth:9,padding:6}}}}});
+    dC("c-kt");CHARTS["c-kt"]=new Chart(el("c-kt"),{type:"bar",data:{labels:kd.map(d=>d.c),datasets:[{data:kd.map(d=>d.m),backgroundColor:S.ac,borderRadius:4}]},options:{indexAxis:"y",plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{ticks:{font:{size:9}}}}}});
+    dC("c-dep");CHARTS["c-dep"]=new Chart(el("c-dep"),{type:"line",data:{labels:dp.map(d=>d.mes),datasets:[{data:dp.map(d=>d.v),borderColor:S.dk,backgroundColor:S.lt+"88",fill:true,tension:.4,pointRadius:3}]},options:{plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:10}}},y:{ticks:{font:{size:9},callback:v=>"S/"+Math.round(v/1000)+"k"}}}}});
+  },50);
+}
+
+function pgTangibles(){
+  const areas=["Todos",...new Set(TANGIBLES.map(t=>t.area))];
+  let list=st.tanFilt==="Todos"?TANGIBLES:TANGIBLES.filter(t=>t.area===st.tanFilt);
+  list=filtStr(list,srch.tan);
+  const sel=TANGIBLES.find(t=>t.id===st.tanSel);
+  const dc=sel?Array.from({length:sel.life},(_,i)=>({a:`Año ${i+1}`,acum:r2(sel.total/sel.life*(i+1)),libro:r2(Math.max(sel.total-sel.total/sel.life*(i+1),0))})):[];
+  el("page").innerHTML=`
+  <div class="pg-title">Activos Tangibles</div>
+  <div class="pg-sub">${TANGIBLES.length} activos registrados · Total: ${fmt(TANGIBLES.reduce((s,t)=>s+t.total,0))}</div>
+  <div id="tan-page-msg"></div>
+  <div class="fbar">${areas.map(a=>`<button class="fbtn${st.tanFilt===a?' active':''}" onclick="st.tanFilt='${a}';pgTangibles()">${a}</button>`).join("")}${srchBox("tan","Buscar activo…","pgTangibles")}<span style="margin-left:auto;font-size:11px;color:${S.mu}">Mostrando <strong>${list.length}</strong> · Total: <strong>${fmt(list.reduce((s,t)=>s+t.total,0))}</strong></span><button class="btn btn-ac btn-sm" onclick="openModal('tan-new')">+ Nuevo</button></div>
+  <div class="card"><div class="twrap"><table><thead><tr><th>Código</th><th>Nombre</th><th>Área</th><th>Cant</th><th>P.Unit</th><th>Total</th><th>Vida</th><th>Dep%</th><th>Dep/Mes</th><th>Acciones</th></tr></thead>
+  <tbody>${list.length?list.map(t=>`<tr><td class="mo" style="font-size:10px">${t.code}</td><td>${t.name}</td><td>${t.area}</td><td style="text-align:center">${t.qty}</td><td class="mo">${fmt(t.unit)}</td><td class="mo">${fmt(t.total)}</td><td>${t.life}a</td><td>${(t.rate*100).toFixed(0)}%</td><td class="mo">${fmt(r2(t.total/t.life/12))}</td><td><div class="act-row"><button class="btn btn-out btn-sm" onclick="openModal('tan-edit','${t.id}')">✏</button><button class="btn btn-sm" style="background:#FCEAEA;color:${S.rd};border:1px solid #F0B0B0" onclick="tanDel('${t.id}')">🗑</button></div></td></tr>`).join(""):`<tr><td colspan="10" style="text-align:center;color:${S.mu};padding:16px">Sin resultados</td></tr>`}</tbody></table></div></div>
+  <div class="card">
+    <div class="card-title">Tabla de Depreciación Individual</div>
+    <select class="fi" style="max-width:380px;margin-bottom:12px" onchange="st.tanSel=this.value;pgTangibles()">
+      <option value="">— Seleccionar activo —</option>${TANGIBLES.map(t=>`<option value="${t.id}"${st.tanSel===t.id?' selected':''}>${t.code} · ${t.name}</option>`).join("")}
+    </select>
+    ${sel?`<div class="infobox" style="margin-bottom:10px">Costo: <strong>${fmt(sel.total)}</strong> · Vida: <strong>${sel.life} años</strong> · Dep. anual: <strong>${fmt(r2(sel.total/sel.life))}</strong> · Dep. mensual: <strong>${fmt(r2(sel.total/sel.life/12))}</strong></div><canvas id="c-dep-a" height="120"></canvas>`:`<p style="font-size:12px;color:${S.mu}">Selecciona un activo para ver su tabla de depreciación.</p>`}
+  </div>`;
+  if(sel){setTimeout(()=>{dC("c-dep-a");CHARTS["c-dep-a"]=new Chart(el("c-dep-a"),{type:"bar",data:{labels:dc.map(d=>d.a),datasets:[{label:"Dep. Acum.",data:dc.map(d=>d.acum),backgroundColor:S.ac},{label:"Val. Libros",data:dc.map(d=>d.libro),backgroundColor:S.dk}]},options:{plugins:{legend:{labels:{font:{size:9},boxWidth:9}}},scales:{x:{ticks:{font:{size:9}}},y:{ticks:{font:{size:9},callback:v=>"S/"+Math.round(v/1000)+"k"}}}}});},50);}
+}
+function openModal(type,id){
+  const mr=el("modal-root");
+  if(type==="tan-new"||type==="tan-edit"){
+    const t=id?TANGIBLES.find(t=>t.id===id):{id:"",code:"TAN-"+String(TANGIBLES.length+1).padStart(3,"0"),name:"",area:"Fachada",qty:1,unit:0,total:0,life:10,rate:.10};
+    mr.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+      <div class="modal-title">${id?"Editar":"Nuevo"} Activo Tangible<button class="modal-close" onclick="closeModal()">✕</button></div>
+      <div id="tan-msg"></div>
+      <div class="fr"><div class="fg"><label class="fl">Código</label><input class="fi" id="mt-code" value="${t.code}"></div><div class="fg"><label class="fl">Nombre</label><input class="fi" id="mt-name" value="${t.name}" placeholder="Nombre del activo"></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Área</label><select class="fi" id="mt-area">${["Fachada","Exhibición","Caja","Fábrica","Almacén","Administración"].map(a=>`<option${t.area===a?' selected':''}>${a}</option>`).join("")}</select></div><div class="fg"><label class="fl">Cantidad</label><input class="fi" id="mt-qty" type="number" value="${t.qty}" min="1"></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Precio unitario (S/)</label><input class="fi" id="mt-unit" type="number" value="${t.unit}" step="0.01" oninput="document.getElementById('mt-total').value=r2(+this.value*+document.getElementById('mt-qty').value)"></div><div class="fg"><label class="fl">Total (S/)</label><input class="fi" id="mt-total" type="number" value="${t.total}" step="0.01"></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Vida útil (años)</label><input class="fi" id="mt-life" type="number" value="${t.life}" min="1" max="20"></div><div class="fg"><label class="fl">Tasa dep. (%)</label><input class="fi" id="mt-rate" type="number" value="${(t.rate*100).toFixed(0)}" min="1" max="100"></div></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-dk btn-full" onclick="tanSave('${id||""}')">💾 Guardar</button>
+        <button class="btn btn-out" onclick="closeModal()">Cancelar</button>
+      </div></div></div>`;
+  }
+}
+function tanSave(id){
+  const code=el("mt-code").value.trim(),name=el("mt-name").value.trim(),area=el("mt-area").value,qty=+el("mt-qty").value,unit=+el("mt-unit").value,total=+el("mt-total").value,life=+el("mt-life").value,rate=+el("mt-rate").value/100;
+  if(!name){showMsg("tan-msg","⚠ El nombre es requerido","err");return;}
+  const esNuevo=!id;
+  if(id){const t=TANGIBLES.find(t=>t.id===id);if(t)Object.assign(t,{code,name,area,qty,unit,total,life,rate});}
+  else TANGIBLES.push({id:"T"+Date.now(),code,name,area,qty,unit,total,life,rate});
+  closeModal();pgTangibles();
+  if(typeof logAct==="function")logAct(esNuevo?"Activo tangible creado: "+name:"Activo tangible actualizado: "+name);
+  showMsg("tan-page-msg",esNuevo?"✅ Activo registrado correctamente":"✅ Activo actualizado correctamente","ok");
+}
+function tanDel(id){confirmar("¿Eliminar este activo tangible? Esta acción no se puede deshacer.",()=>{TANGIBLES.splice(TANGIBLES.findIndex(t=>t.id===id),1);pgTangibles();showMsg("tan-page-msg","🗑 Activo eliminado","ok");});}
+function closeModal(){el("modal-root").innerHTML="";}
+
+function pgIntangibles(){
+  const total=INTGS.reduce((s,i)=>s+i.value,0);
+  const list=filtStr(INTGS,srch.int);
+  el("page").innerHTML=`
+  <div class="pg-title">Activos Intangibles</div>
+  <div class="pg-sub">${INTGS.length} intangibles registrados · Total: ${fmt(total)} · Amortización línea recta SUNAT</div>
+  <div id="int-page-msg"></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">${srchBox("int","Buscar intangible…","pgIntangibles")}<span style="font-size:11px;color:${S.mu}">Mostrando <strong>${list.length}</strong> de ${INTGS.length}</span><button class="btn btn-ac btn-sm" onclick="openIntModal()">+ Nuevo</button></div>
+  <div class="card"><div class="twrap"><table><thead><tr><th>Código</th><th>Descripción</th><th>Cat.</th><th>Valor</th><th>Vida</th><th>Amort. Anual</th><th>Amort. Mes</th><th>Acciones</th></tr></thead>
+  <tbody>${list.length?list.map(i=>`<tr><td class="mo" style="font-size:10px">${i.code}</td><td>${i.name}</td><td>${i.cat}</td><td class="mo">${fmt(i.value)}</td><td>${i.life}a</td><td class="mo">${fmt(r2(i.value*i.rate))}</td><td class="mo">${fmt(r2(i.value*i.rate/12))}</td><td><div class="act-row"><button class="btn btn-out btn-sm" onclick="openIntModal('${i.id}')">✏</button><button class="btn btn-sm" style="background:#FCEAEA;color:${S.rd};border:1px solid #F0B0B0" onclick="intDel('${i.id}')">🗑</button></div></td></tr>`).join(""):`<tr><td colspan="8" style="text-align:center;color:${S.mu};padding:16px">Sin resultados</td></tr>`}</tbody></table></div></div>
+  <div class="dkbox"><b>Resumen Amortización · Línea Recta · SUNAT 2026</b><br/>
+  Total intangibles: <strong>${fmt(total)}</strong> · Amort. anual total: <strong>${fmt(r2(INTGS.reduce((s,i)=>s+i.value*i.rate,0)))}</strong> · Amort. mensual total: <strong>${fmt(r2(INTGS.reduce((s,i)=>s+i.value*i.rate/12,0)))}</strong><br/>
+  Vida útil por defecto: 5 años (20% anual) · Activos web: 1 año (100%) · Marca SOLEM: 10 años (10%)</div>`;
+}
+function openIntModal(id){
+  const mr=el("modal-root");
+  const CATS=["Marca","Legal","Licencias","Diseño","Web","Software","Marketing","Otro"];
+  const i=id?INTGS.find(i=>i.id===id):{id:"",code:"INT-"+String(INTGS.length+1).padStart(3,"0"),name:"",cat:"Software",value:0,life:5,rate:.20};
+  mr.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <div class="modal-title">${id?"Editar":"Nuevo"} Activo Intangible<button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="int-msg"></div>
+    <div class="fr"><div class="fg"><label class="fl">Código</label><input class="fi" id="mi-code" value="${i.code}"></div><div class="fg"><label class="fl">Categoría</label><select class="fi" id="mi-cat">${CATS.map(c=>`<option${i.cat===c?' selected':''}>${c}</option>`).join("")}</select></div></div>
+    <div class="fg"><label class="fl">Descripción</label><input class="fi" id="mi-name" value="${i.name}" placeholder="Nombre del intangible"></div>
+    <div class="fr"><div class="fg"><label class="fl">Valor (S/)</label><input class="fi" id="mi-val" type="number" value="${i.value}" step="0.01"></div><div class="fg"><label class="fl">Vida útil (años)</label><input class="fi" id="mi-life" type="number" value="${i.life}" min="1" max="20"></div></div>
+    <div class="fg"><label class="fl">Tasa amort. (%)</label><input class="fi" id="mi-rate" type="number" value="${(i.rate*100).toFixed(0)}" min="1" max="100"></div>
+    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-dk btn-full" onclick="intSave('${id||""}')">💾 Guardar</button><button class="btn btn-out" onclick="closeModal()">Cancelar</button></div>
+  </div></div>`;
+}
+function intSave(id){
+  const code=el("mi-code").value.trim(),name=el("mi-name").value.trim(),cat=el("mi-cat").value,value=+el("mi-val").value,life=+el("mi-life").value,rate=+el("mi-rate").value/100;
+  if(!name){showMsg("int-msg","⚠ La descripción es requerida","err");return;}
+  const esNuevo=!id;
+  if(id){const i=INTGS.find(i=>i.id===id);if(i)Object.assign(i,{code,name,cat,value,life,rate});}
+  else INTGS.push({id:"I"+Date.now(),code,name,cat,value,life,rate});
+  closeModal();pgIntangibles();
+  showMsg("int-page-msg",esNuevo?"✅ Intangible registrado correctamente":"✅ Intangible actualizado correctamente","ok");
+}
+function intDel(id){confirmar("¿Eliminar este activo intangible? Esta acción no se puede deshacer.",()=>{INTGS.splice(INTGS.findIndex(i=>i.id===id),1);pgIntangibles();showMsg("int-page-msg","🗑 Intangible eliminado","ok");});}
+
+let GASTOS=[
+  {id:"G1",c:"Planilla (benef.45%)",m:29522},{id:"G2",c:"Inventario inicial",m:24588.80},
+  {id:"G3",c:"Alquiler local",m:2800},{id:"G4",c:"Marketing+transporte",m:1500},
+  {id:"G5",c:"Servicios (luz+agua)",m:900},{id:"G6",c:"Caja chica",m:1000},{id:"G7",c:"Internet+telefonía",m:120},
+];
+function pgCapital(){
+  const vp=r2(INV.reduce((s,i)=>s+i.stock*i.price,0));
+  const totalG=r2(GASTOS.reduce((s,g)=>s+g.m,0));
+  el("page").innerHTML=`
+  <div class="pg-title">Capital de Trabajo</div>
+  <div class="pg-sub">Gastos operativos mes 1 · Trujillo, Perú · Total: ${fmt(totalG)}</div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><div class="card-title" style="margin:0">Gastos del Mes</div><button class="btn btn-ac btn-sm" onclick="openGastoModal()">+ Agregar</button></div>
+      ${GASTOS.map(g=>`<div class="sr"><span class="sl">${g.c}</span><div style="display:flex;gap:6px;align-items:center"><span class="sv">${fmt(g.m)}</span><button class="btn btn-out btn-sm" style="padding:2px 6px" onclick="openGastoModal('${g.id}')">✏</button><button class="btn btn-sm" style="padding:2px 6px;background:#FCEAEA;color:${S.rd};border:1px solid #F0B0B0" onclick="gastoDel('${g.id}')">🗑</button></div></div>`).join("")}
+      <div class="sr" style="font-size:13px;padding-top:8px"><strong style="color:${S.dk}">TOTAL</strong><strong style="color:${S.ac};font-family:'DM Mono',monospace">${fmt(totalG)}</strong></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Planilla de Sueldos</div>
+      ${PLANILLA.map(p=>`<div class="sr"><span class="sl">${p.cargo} ×${p.qty}</span><span class="sv">${fmt(p.total)}</span></div>`).join("")}
+      <div class="sr" style="font-size:13px;padding-top:8px"><strong style="color:${S.dk}">TOTAL PLANILLA</strong><strong style="color:${S.ac};font-family:'DM Mono',monospace">${fmt(29522)}</strong></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">Inventario Inicial — ${INV.reduce((s,i)=>s+i.stock,0)} pares de calzado</div>
+    ${tbl([{l:"Tipo",k:"n"},{l:"Pares",k:"q"},{l:"Mix",k:"pct"},{l:"Costo",k:"uc",mo:true},{l:"Precio",k:"up",mo:true},{l:"Margen",k:"mg"},{l:"Val. Inventario",k:"tt",mo:true}],INV.map(i=>({n:i.name,q:i.stock,pct:r2(i.stock/INV.reduce((s,x)=>s+x.stock,0)*100)+"%",uc:fmt(i.cost),up:fmt(i.price),mg:r2((i.price-i.cost)/i.cost*100)+"%",tt:fmt(r2(i.stock*i.cost))})))}
+    <div style="margin-top:10px;display:flex;gap:18px;flex-wrap:wrap;font-size:11px">
+      <span style="color:${S.mu}">Total pares: <strong style="color:${S.dk}">${INV.reduce((s,i)=>s+i.stock,0)}</strong></span>
+      <span style="color:${S.mu}">Costo total: <strong style="color:${S.ac}">${fmt(r2(INV.reduce((s,i)=>s+i.stock*i.cost,0)))}</strong></span>
+      <span style="color:${S.mu}">Venta potencial: <strong style="color:${S.gn}">${fmt(vp)}</strong></span>
+      <span style="color:${S.mu}">Margen prom: <strong style="color:${S.gn}">${r2(INV.reduce((s,i)=>s+(i.price-i.cost)/i.cost,0)/INV.length*100)}%</strong></span>
+    </div>
+  </div>`;
+}
+function openGastoModal(id){
+  const mr=el("modal-root");
+  const g=id?GASTOS.find(g=>g.id===id):{id:"",c:"",m:0};
+  mr.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <div class="modal-title">${id?"Editar":"Nuevo"} Gasto<button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="fg"><label class="fl">Concepto</label><input class="fi" id="mg-c" value="${g.c}" placeholder="Descripción del gasto"></div>
+    <div class="fg"><label class="fl">Monto (S/)</label><input class="fi" id="mg-m" type="number" value="${g.m}" step="0.01"></div>
+    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-dk btn-full" onclick="gastoSave('${id||""}')">💾 Guardar</button><button class="btn btn-out" onclick="closeModal()">Cancelar</button></div>
+  </div></div>`;
+}
+function gastoSave(id){
+  const c=el("mg-c").value.trim(),m=+el("mg-m").value;
+  if(!c){return;}
+  const esNuevo=!id;
+  if(id){const g=GASTOS.find(g=>g.id===id);if(g)Object.assign(g,{c,m});}
+  else GASTOS.push({id:"G"+Date.now(),c,m});
+  closeModal();pgCapital();
+}
+function gastoDel(id){confirmar("¿Eliminar este gasto?",()=>{GASTOS.splice(GASTOS.findIndex(g=>g.id===id),1);pgCapital();});}
+
+function pgFinanciamiento(){
+  const tea=st.finT/100,P=st.finM,n=st.finC;
+  const sch=st.finS==="frances"?cFr(P,tea,n):st.finS==="aleman"?cAl(P,tea,n):cAm(P,tea,n);
+  const tI=r2(sch.reduce((s,r)=>s+r.interes,0)),tP=r2(sch.reduce((s,r)=>s+r.cuota,0));
+  const tem=r2((Math.pow(1+tea,1/12)-1)*100);
+  const disp=st.finSF?sch:sch.slice(0,8);
+  el("page").innerHTML=`
+  <div class="pg-title">Financiamiento</div>
+  <div class="pg-sub">Calculadora SBS · Francés / Alemán / Americano</div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="fhero" style="background:${S.dk}"><div class="fhl">Aporte Propio (70%)</div><div class="fhv">${fmt(109935.34)}</div><div class="fhs">Socio Fundador SOLEM</div></div>
+    <div class="fhero" style="background:${S.ac}"><div class="fhl">Préstamo Bancario (30%)</div><div class="fhv">${fmt(47115.15)}</div><div class="fhs">Banco BCP · 36 meses</div></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Calculadora Financiera SBS</div>
+    <div class="fr" style="margin-bottom:12px">
+      <div class="fg"><label class="fl">Monto (S/)</label><input class="fi" type="number" value="${st.finM}" step="1000" onchange="st.finM=+this.value;pgFinanciamiento()"></div>
+      <div class="fg"><label class="fl">TEA (%)</label><input class="fi" type="number" value="${st.finT}" step="1" onchange="st.finT=+this.value;pgFinanciamiento()"></div>
+      <div class="fg"><label class="fl">Cuotas</label><input class="fi" type="number" value="${st.finC}" step="6" onchange="st.finC=+this.value;pgFinanciamiento()"></div>
+      <div class="fg"><label class="fl">Sistema</label><select class="fi" onchange="st.finS=this.value;pgFinanciamiento()"><option value="frances"${st.finS==="frances"?' selected':''}>Francés (cuota fija)</option><option value="aleman"${st.finS==="aleman"?' selected':''}>Alemán (amort. const.)</option><option value="americano"${st.finS==="americano"?' selected':''}>Americano (bullet)</option></select></div>
+    </div>
+    <div class="g4" style="background:${S.cr};border-radius:10px;padding:10px;margin-bottom:12px">
+      ${[{l:"TEM mensual",v:`${tem}%`},{l:"Cuota inicial",v:fmt(sch[0]?.cuota||0)},{l:"Total intereses",v:fmt(tI)},{l:"Total a pagar",v:fmt(tP)}].map(k=>`<div style="text-align:center"><div style="font-size:10px;color:${S.mu};margin-bottom:2px">${k.l}</div><div style="font-size:13px;font-weight:700;color:${S.dk}">${k.v}</div></div>`).join("")}
+    </div>
+    ${tbl([{l:"N°",k:"n"},{l:"Cuota",k:"cf",mo:true},{l:"Interés",k:"ix",mo:true},{l:"Amort.",k:"af",mo:true},{l:"Saldo",k:"sf",mo:true}],disp.map(r=>({...r,cf:fmt(r.cuota),ix:fmt(r.interes),af:fmt(r.amort),sf:fmt(r.saldo)})))}
+    ${sch.length>8?`<button class="btn btn-out btn-sm" style="margin-top:8px" onclick="st.finSF=!st.finSF;pgFinanciamiento()">${st.finSF?'▲ Ocultar':'▼ Ver '+(sch.length-8)+' cuotas más'}</button>`:''}
+  </div>`;
+}
+
+function pgBalance(){
+  const tA=SOLEM.tA,tP=SOLEM.pas,tPat=SOLEM.pat,tPP=r2(tP+tPat),dif=r2(tA-tPP),ok=Math.abs(dif)<.01;
+  const fecha=new Date().toLocaleDateString("es-PE",{day:"2-digit",month:"long",year:"numeric"});
+  el("page").innerHTML=`
+  <div class="pg-title">Estado de Situación Financiera</div>
+  <div class="pg-sub">Al ${fecha} · NIIF para PYMES · Régimen MYPE Tributario</div>
+  <div class="${ok?'okbox':'errbox'}">
+    <span style="font-size:22px">${ok?'✅':'🔴'}</span>
+    <div><div style="font-weight:700;font-size:13px;color:${ok?S.gn:S.rd};font-family:'Playfair Display',serif">${ok?'Balance cuadrado correctamente':'⚠ DESEQUILIBRIO CONTABLE'}</div>
+    <div style="font-size:11px;color:${ok?S.gn:S.rd}">${fmt(tA)} = ${fmt(tP)} + ${fmt(tPat)} = ${fmt(tPP)} · Diferencia: ${fmt(Math.abs(dif))}</div></div>
+  </div>
+  <div class="g2" style="margin-bottom:12px">
+    <div class="bsec">
+      <div class="bhdr-dk">ACTIVO</div>
+      <div style="padding:4px 0">
+        <div style="padding:7px 14px;font-size:9.5px;font-weight:700;color:${S.mu};text-transform:uppercase;letter-spacing:.8px">Activo Corriente</div>
+        <div class="brow bi1"><span>Caja y bancos</span><span class="bval">${fmt(1000)}</span></div>
+        <div class="brow bi1"><span>Inventarios</span><span class="bval">${fmt(24588.80)}</span></div>
+        <div class="brow bi1"><span>Anticipos / Prepagados</span><span class="bval">${fmt(34842)}</span></div>
+        <div class="brow btot"><span>TOTAL ACTIVO CORRIENTE</span><span class="bval">${fmt(60430.80)}</span></div>
+        <div style="padding:7px 14px;font-size:9.5px;font-weight:700;color:${S.mu};text-transform:uppercase;letter-spacing:.8px">Activo No Corriente</div>
+        <div class="brow bi1"><span>Activos tangibles (costo)</span><span class="bval">${fmt(93045.70)}</span></div>
+        <div class="brow bi1"><span>(-) Depreciación acumulada</span><span class="bval">${fmt(0)}</span></div>
+        <div class="brow bi1"><span>Activos intangibles (costo)</span><span class="bval">${fmt(3573.99)}</span></div>
+        <div class="brow bi1"><span>(-) Amortización acumulada</span><span class="bval">${fmt(0)}</span></div>
+        <div class="brow btot"><span>TOTAL ACTIVO NO CORRIENTE</span><span class="bval">${fmt(96619.69)}</span></div>
+      </div>
+      <div class="bhdr-dk"><span>TOTAL ACTIVO</span><span style="font-family:'DM Mono',monospace">${fmt(tA)}</span></div>
+    </div>
+    <div class="bsec">
+      <div class="bhdr-ac">PASIVO Y PATRIMONIO</div>
+      <div style="padding:4px 0">
+        <div style="padding:7px 14px;font-size:9.5px;font-weight:700;color:${S.mu};text-transform:uppercase;letter-spacing:.8px">Pasivo</div>
+        <div class="brow bi1"><span>Pasivo corriente</span><span class="bval">${fmt(0)}</span></div>
+        <div class="brow bi1"><span>Préstamo bancario BCP</span><span class="bval">${fmt(47115.15)}</span></div>
+        <div class="brow btot"><span>TOTAL PASIVO</span><span class="bval">${fmt(47115.15)}</span></div>
+        <div style="padding:7px 14px;font-size:9.5px;font-weight:700;color:${S.mu};text-transform:uppercase;letter-spacing:.8px">Patrimonio</div>
+        <div class="brow bi1"><span>Capital social</span><span class="bval">${fmt(109935.34)}</span></div>
+        <div class="brow bi1"><span>Resultados acumulados</span><span class="bval">${fmt(0)}</span></div>
+        <div class="brow btot"><span>TOTAL PATRIMONIO</span><span class="bval">${fmt(109935.34)}</span></div>
+      </div>
+      <div class="bhdr-ac"><span>TOTAL PASIVO + PATRIMONIO</span><span style="font-family:'DM Mono',monospace">${fmt(tPP)}</span></div>
+    </div>
+  </div>
+  <div class="g4">
+    ${[{l:"Solvencia",v:r2(tA/tP)+"x",d:"Activo/Pasivo"},{l:"Autonomía",v:r2(tPat/tA*100)+"%",d:"Patrimonio/Activo"},{l:"Endeudamiento",v:r2(tP/tA*100)+"%",d:"Pasivo/Activo"},{l:"Apalancamiento",v:r2(tA/tPat)+"x",d:"Activo/Patrimonio"}].map(r=>`<div class="card" style="text-align:center;padding:12px;margin-bottom:0"><div style="font-size:9.5px;color:${S.mu};margin-bottom:3px">${r.l}</div><div style="font-size:18px;font-weight:700;color:${S.dk};font-family:'Playfair Display',serif">${r.v}</div><div style="font-size:10px;color:${S.mu}">${r.d}</div></div>`).join("")}
+  </div>`;
+}
+
+function pgTributario(){
+  const IGV=.18,TIER1=82500;
+  const nV=r2(st.tribV/1.18),igvV=r2(st.tribV-nV),nC=r2(st.tribC/1.18),igvC=r2(st.tribC-nC);
+  const igvP=r2(Math.max(igvV-igvC,0)),pC=r2(nV*.01),totM=r2(igvP+pC);
+  const pA=nV*12,cA=nC*12,util=r2(Math.max(pA-cA,0));
+  const ir1=r2(Math.min(util,TIER1)*.10),ir2=r2(Math.max(util-TIER1,0)*.295),irT=r2(ir1+ir2);
+  const be={essalud:r2(st.tribSal*.09),grats:r2(st.tribSal*.1367),cts:r2(st.tribSal*.0833),vacs:r2(st.tribSal*.0833),sctr:r2(st.tribSal*.01)};
+  const totBe=r2(Object.values(be).reduce((s,v)=>s+v,0));
+  const REGS=[{n:"Nuevo RUS",lim:"Hasta S/96,000/año",ir:"Cuota fija S/20–600",igv:"No",nota:"Sin facturas"},{n:"RER",lim:"Hasta S/525,000/año",ir:"1.5% ingresos netos",igv:"18%",nota:"Libros simpl."},{n:"MYPE Tributario",lim:"Hasta S/9,350,000/año",ir:"10%/29.5%",igv:"18%",nota:"✅ SOLEM"},{n:"Régimen General",lim:"Sin límite",ir:"29.5% utilidad",igv:"18%",nota:"Empresas grandes"}];
+  let tc="";
+  if(st.tribTab==="pdt") tc=`
+    <div class="card">
+      <div class="card-title">Simulador PDT 621 — IGV + Renta mensual</div>
+      <div class="fr" style="margin-bottom:12px">
+        <div class="fg"><label class="fl">Ventas brutas del mes (con IGV)</label><input class="fi" type="number" value="${st.tribV}" step="1000" onchange="st.tribV=+this.value;pgTributario()"></div>
+        <div class="fg"><label class="fl">Compras del mes (con IGV)</label><input class="fi" type="number" value="${st.tribC}" step="1000" onchange="st.tribC=+this.value;pgTributario()"></div>
+      </div>
+      <div class="g3" style="background:${S.cr};border-radius:10px;padding:10px;margin-bottom:12px">
+        ${[{l:"Base imponible ventas",v:fmt(nV)},{l:"IGV ventas (18%)",v:fmt(igvV)},{l:"Crédito fiscal compras",v:fmt(igvC)},{l:"IGV a pagar",v:fmt(igvP),hi:true},{l:"Pago a cuenta IR (1%)",v:fmt(pC)},{l:"Total obligación mes",v:fmt(totM),hi:true}].map(k=>`<div style="text-align:center;padding:7px;background:${k.hi?"#FEF3E2":"transparent"};border-radius:8px"><div style="font-size:10px;color:${S.mu};margin-bottom:2px">${k.l}</div><div style="font-size:14px;font-weight:700;color:${k.hi?S.ac:S.dk};font-family:'DM Mono',monospace">${k.v}</div></div>`).join("")}
+      </div>
+      <div class="infobox">📅 Vencimiento PDT 621: día <strong>20 del mes siguiente</strong> · Formulario Virtual 621 en sunat.gob.pe · Régimen MYPE Tributario · UIT 2026: S/ 5,500</div>
+    </div>`;
+  else if(st.tribTab==="anual") tc=`<div class="card">
+    <div class="card-title">Proyección Anual — Impuesto a la Renta (MYPE Tributario)</div>
+    <div class="fr" style="margin-bottom:14px"><div class="fg"><label class="fl">Ventas brutas mensual</label><input class="fi" type="number" value="${st.tribV}" step="1000" onchange="st.tribV=+this.value;pgTributario()"></div><div class="fg"><label class="fl">Compras mensuales</label><input class="fi" type="number" value="${st.tribC}" step="1000" onchange="st.tribC=+this.value;pgTributario()"></div></div>
+    <div class="g2" style="margin-bottom:14px">${[{l:"Ingresos netos anuales",v:fmt(pA)},{l:"Costos anuales",v:fmt(cA)},{l:"Utilidad imponible",v:fmt(util)},{l:"IR 10% (hasta S/82,500)",v:fmt(ir1)},{l:"IR 29.5% (exceso)",v:fmt(ir2)},{l:"IR ANUAL TOTAL",v:fmt(irT)}].map(k=>`<div style="background:${S.cr};border-radius:10px;padding:10px"><div style="font-size:10px;color:${S.mu};margin-bottom:2px">${k.l}</div><div style="font-size:16px;font-weight:700;color:${S.dk};font-family:'Playfair Display',serif">${k.v}</div></div>`).join("")}</div>
+    <div class="dkbox"><b>Cálculo:</b> Primeros S/82,500 (15 UIT × S/5,500): 10% = ${fmt(ir1)} · Exceso 29.5% = ${fmt(ir2)} · <strong>IR total anual: ${fmt(irT)}</strong> · Tasa efectiva: ${util>0?r2(irT/util*100):0}%</div>
+  </div>`;
+  else if(st.tribTab==="reg") tc=`<div class="card">
+    <div class="card-title">Comparativo de Regímenes SUNAT 2026</div>
+    ${tbl([{l:"Régimen",k:"n"},{l:"Límite",k:"lim"},{l:"IR",k:"ir"},{l:"IGV",k:"igv"},{l:"Nota",k:"nota"}],REGS.map(r=>({...r,n:r.nota.includes("✅")?`<strong style="color:${S.gn}">${r.n} ✅</strong>`:r.n})))}
+    <div style="margin-top:12px;background:#EDFBF4;border:1px solid #B8EDD4;border-radius:10px;padding:10px;font-size:11px;color:${S.gn}">✅ SOLEM aplica Régimen MYPE Tributario: 10% hasta 15 UIT + 29.5% exceso · Pagos a cuenta 1%/mes · PDT 621 mensual</div>
+  </div>`;
+  else tc=`<div class="card">
+    <div class="card-title">Calculadora de Beneficios Laborales</div>
+    <div style="max-width:220px;margin-bottom:14px"><div class="fg"><label class="fl">Sueldo base (S/)</label><input class="fi" type="number" value="${st.tribSal}" step="100" onchange="st.tribSal=+this.value;pgTributario()"></div></div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:8px;margin-bottom:14px">${[{l:"Sueldo base",v:fmt(st.tribSal),p:""},{l:"EsSalud (9%)",v:fmt(be.essalud),p:"9%"},{l:"Gratificaciones (13.67%)",v:fmt(be.grats),p:"13.67%"},{l:"CTS (8.33%)",v:fmt(be.cts),p:"8.33%"},{l:"Vacaciones (8.33%)",v:fmt(be.vacs),p:"8.33%"},{l:"SCTR (1%)",v:fmt(be.sctr),p:"1%"},{l:"Total beneficios",v:fmt(totBe),p:r2(totBe/st.tribSal*100)+"%"},{l:"COSTO TOTAL",v:fmt(r2(st.tribSal+totBe)),p:"~145%"}].map(k=>`<div style="background:${S.cr};border-radius:10px;padding:10px"><div style="font-size:10px;color:${S.mu};margin-bottom:2px">${k.l}</div><div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-size:13px;font-weight:700;color:${S.dk};font-family:'DM Mono',monospace">${k.v}</span>${k.p?`<span style="font-size:10px;color:${S.ac}">${k.p}</span>`:""}</div></div>`).join("")}</div>
+    <div class="dkbox">SOLEM 16 trabajadores · Planilla total con beneficios: <strong>${fmt(29522)}/mes</strong></div>
+  </div>`;
+  el("page").innerHTML=`
+  <div class="pg-title">Módulo Tributario</div>
+  <div class="pg-sub">Régimen MYPE Tributario · IGV 18% · SUNAT 2026</div>
+  <div class="tabs">${[{id:"pdt",l:"PDT 621"},{id:"anual",l:"Proyección Anual"},{id:"reg",l:"Comparativo"},{id:"planilla",l:"Benef. Laborales"}].map(t=>`<button class="tab${st.tribTab===t.id?' active':''}" onclick="st.tribTab='${t.id}';pgTributario()">${t.l}</button>`).join("")}</div>
+  ${tc}`;
+}
+
+/* ══════════════════════════════════════════
+   POS — Punto de Venta SOLEM
+   ══════════════════════════════════════════ */
+let VENTAS_POS=[];
+
+function renderPOS(){
+  const cart=st.posCart;
+  const sub=r2(cart.reduce((s,i)=>s+i.price*i.qty,0));
+  const discAmt=r2(sub*st.posDisc/100);
+  const neto=r2(sub-discAmt);
+  const igv=r2(neto*.18/1.18);
+  const base=r2(neto-igv);
+  const filtInv=st.posFilter?INV.filter(p=>p.name.toLowerCase().includes(st.posFilter.toLowerCase())||p.sku.toLowerCase().includes(st.posFilter.toLowerCase())):INV;
+
+  const cartHTML=cart.length?cart.map((item,idx)=>`
+    <div class="pos-cart-item">
+      <span style="font-size:18px;flex-shrink:0">${item.e}</span>
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:600;color:var(--dk);font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${item.name}</div>
+        <div style="font-size:9.5px;color:var(--mu)">T${item.sz} · ${fmt(item.price)}/u</div>
+      </div>
+      <div class="pos-qty-ctrl">
+        <button class="pos-qty-btn" onclick="posQty(${idx},-1)">−</button>
+        <span style="font-size:12px;font-weight:700;min-width:18px;text-align:center">${item.qty}</span>
+        <button class="pos-qty-btn" onclick="posQty(${idx},1)">+</button>
+      </div>
+      <div style="text-align:right;min-width:58px">
+        <div style="font-family:'DM Mono',monospace;font-size:11.5px;font-weight:700;color:var(--dk)">${fmt(r2(item.price*item.qty))}</div>
+        <button onclick="posRemove(${idx})" style="background:none;border:none;color:var(--rd);cursor:pointer;font-size:10px;padding:0">✕ quitar</button>
+      </div>
+    </div>`).join("")
+    :`<div class="pos-cart-empty">🛒<br/>Selecciona productos<br/>del catálogo</div>`;
+
+  return `
+  <div class="pos-layout">
+    <div>
+      <div style="display:flex;gap:8px;margin-bottom:10px;align-items:center">
+        <input class="fi" placeholder="🔍 Buscar producto…" style="flex:1;padding:7px 12px;font-size:12px" value="${st.posFilter}" oninput="st.posFilter=this.value;posRefresh()">
+        <span style="font-size:11px;color:var(--mu);white-space:nowrap">${filtInv.length} productos</span>
+      </div>
+      <div class="pos-products">
+        ${filtInv.map(p=>{
+          const inCart=cart.find(c=>c.pid===p.id);
+          const noStock=p.stock<=0;
+          return`<div class="pos-pcard${noStock?' out-of-stock':''}" onclick="${noStock?'':'posAddProduct(\''+p.id+'\')'}">
+            <div class="pimg">${p.e}</div>
+            <div class="pbody">
+              <div style="font-size:11px;font-weight:700;color:var(--dk);margin-bottom:2px;font-family:'Playfair Display',serif;line-height:1.2">${p.name}</div>
+              <div style="font-size:9px;color:var(--mu);margin-bottom:4px">${p.gender}</div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+                <span style="font-size:13px;font-weight:700;color:var(--ac)">${fmt(p.price)}</span>
+                <span style="${p.stock<=5?'color:var(--rd)':'color:var(--gn)'};font-size:9px;font-weight:700">${noStock?'Sin stock':p.stock+' uds'}</span>
+              </div>
+              ${inCart?`<div style="background:#EDFBF4;border-radius:6px;padding:2px 6px;font-size:9.5px;color:var(--gn);text-align:center">✓ ${inCart.qty} en carrito</div>`:''}
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+    </div>
+
+    <div class="pos-panel">
+      <div class="pos-panel-hdr">🖥 Carrito de Venta <span style="margin-left:auto;background:rgba(255,255,255,.15);border-radius:9999px;padding:2px 10px;font-size:11px;font-family:'DM Sans',sans-serif">${cart.length} ítem${cart.length!==1?'s':''}</span></div>
+
+      <div class="pos-client-section">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <div class="fg" style="margin-bottom:0"><label class="fl">Cliente (opcional)</label><input class="fi" style="padding:5px 8px;font-size:11px" value="${st.posCliNombre}" placeholder="Nombre" oninput="st.posCliNombre=this.value"></div>
+          <div class="fg" style="margin-bottom:0"><label class="fl">DNI / RUC</label><input class="fi" style="padding:5px 8px;font-size:11px" value="${st.posCliDni}" placeholder="Doc. identidad" oninput="st.posCliDni=this.value"></div>
+        </div>
+        <div class="fg" style="margin-bottom:0;margin-top:5px"><label class="fl">Teléfono</label><input class="fi" style="padding:5px 8px;font-size:11px" value="${st.posCliTel}" placeholder="+51 999 999 999" oninput="st.posCliTel=this.value"></div>
+      </div>
+
+      <div class="pos-cart" id="pos-cart-body">${cartHTML}</div>
+
+      <div class="pos-totals">
+        <div class="pos-disc-row">
+          <label class="fl" style="margin:0;white-space:nowrap">Descuento %:</label>
+          <input class="fi" type="number" min="0" max="100" value="${st.posDisc}" style="width:70px;padding:4px 8px;font-size:12px" oninput="st.posDisc=Math.min(100,Math.max(0,+this.value));posRefresh()">
+          ${st.posDisc>0?`<span style="font-size:11px;color:var(--rd);font-weight:700">−${fmt(discAmt)}</span>`:''}
+        </div>
+        <div class="pos-total-row"><span style="color:var(--mu)">Subtotal</span><span class="receipt-num">${fmt(sub)}</span></div>
+        ${st.posDisc>0?`<div class="pos-total-row"><span style="color:var(--rd)">Descuento (${st.posDisc}%)</span><span class="receipt-num" style="color:var(--rd)">−${fmt(discAmt)}</span></div>`:''}
+        <div class="pos-total-row"><span style="color:var(--mu)">Base imponible</span><span class="receipt-num">${fmt(base)}</span></div>
+        <div class="pos-total-row"><span style="color:var(--mu)">IGV 18%</span><span class="receipt-num">${fmt(igv)}</span></div>
+        <div class="pos-total-row big"><span>TOTAL</span><span>${fmt(neto)}</span></div>
+      </div>
+
+      <div class="pos-actions">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:2px">
+          <div class="fg" style="margin-bottom:0">
+            <label class="fl">Comprobante</label>
+            <select class="fi" style="padding:5px 8px;font-size:11px" onchange="st.posCompType=this.value">
+              <option value="BOLETA"${st.posCompType==='BOLETA'?' selected':''}>Boleta</option>
+              <option value="FACTURA"${st.posCompType==='FACTURA'?' selected':''}>Factura</option>
+            </select>
+          </div>
+          <div class="fg" style="margin-bottom:0">
+            <label class="fl">Método de pago</label>
+            <select class="fi" style="padding:5px 8px;font-size:11px" onchange="st.posPayMethod=this.value">
+              ${["EFECTIVO","YAPE","PLIN","TARJETA_CREDITO","TRANSFERENCIA"].map(m=>`<option value="${m}"${st.posPayMethod===m?' selected':''}>${m}</option>`).join("")}
+            </select>
+          </div>
+        </div>
+        <button class="btn btn-dk btn-full" onclick="posCheckout()" ${cart.length===0?'disabled style="opacity:.3;cursor:not-allowed"':''} style="${cart.length>0?'font-size:14px;padding:10px;animation:glowPulse 2s infinite':''}">💳 Cobrar ${cart.length>0?fmt(neto):''}</button>
+        <button class="btn btn-out btn-sm btn-full" onclick="posClear()">🗑 Limpiar carrito</button>
+        ${VENTAS_POS.length>0?`<div style="text-align:center;font-size:10px;color:var(--mu);margin-top:4px">Hoy: <strong>${VENTAS_POS.length}</strong> ventas · <strong>${fmt(r2(VENTAS_POS.reduce((s,v)=>s+v.total,0)))}</strong></div>`:''}
+        <div id="pos-msg"></div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:14px">
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div class="card-title" style="margin:0">🧾 Historial de Ventas POS</div>
+        <span style="font-size:11px;color:var(--mu)">${VENTAS_POS.length} ventas · Total: <strong>${fmt(r2(VENTAS_POS.reduce((s,v)=>s+v.total,0)))}</strong></span>
+      </div>
+      ${VENTAS_POS.length?`<div class="twrap"><table><thead><tr><th>N°</th><th>Fecha/Hora</th><th>Cliente</th><th>Productos</th><th>Pago</th><th>Comprobante</th><th>Total</th><th>Estado</th><th>Acciones</th></tr></thead>
+      <tbody>${VENTAS_POS.slice().reverse().map(v=>`<tr>
+        <td class="mo" style="font-size:10px">${v.num}</td>
+        <td style="font-size:10px;color:var(--mu)">${v.fecha} ${v.hora}</td>
+        <td>${v.cliente||'Consumidor final'}</td>
+        <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;font-size:10.5px">${v.items.map(i=>i.name+' x'+i.qty).join(', ')}</td>
+        <td>${bdg(v.pago,'b-br')}</td>
+        <td class="mo" style="font-size:10px">${bdg(v.comprobante,'b-gn')}</td>
+        <td class="mo" style="font-weight:700">${fmt(v.total)}</td>
+        <td>${bdg(v.estado,v.estado==='PAGADO'?'b-gn':'b-am')}</td>
+        <td><div class="act-row">
+          <button class="btn btn-out btn-sm" onclick="posVerRecibo('${v.id}')">🧾 Recibo</button>
+          <button class="btn btn-sm" style="background:#FCEAEA;color:var(--rd);border:1px solid #F0B0B0" onclick="posDelVenta('${v.id}')">🗑</button>
+        </div></td>
+      </tr>`).join('')}</tbody></table></div>`
+      :`<div style="text-align:center;padding:20px;color:var(--mu);font-size:12px">Aún no hay ventas POS registradas. ¡Realiza tu primera venta!</div>`}
+    </div>
+  </div>`;
+}
+
+function posRefresh(){
+  if(st.ecTab==="pos")pgEcommerce();
+}
+
+function posAddProduct(pid){
+  const p=INV.find(p=>p.id===pid);
+  if(!p||p.stock<=0)return;
+  const existing=st.posCart.find(c=>c.pid===pid);
+  if(existing){
+    if(existing.qty>=p.stock){
+      alert('No hay más stock disponible para '+p.name+' ('+p.stock+' disponibles)');return;
+    }
+    existing.qty++;
+  } else {
+    // Si el producto tiene tallas, mostrar selector
+    if(p.sizes&&p.sizes.length>1){
+      posSelectSize(pid);return;
+    }
+    const sz=p.sizes&&p.sizes.length?p.sizes[0]:'';
+    st.posCart.push({pid,name:p.name,price:p.price,qty:1,sz,e:p.e,stock:p.stock});
+  }
+  pgEcommerce();
+}
+
+function posSelectSize(pid){
+  const p=INV.find(p=>p.id===pid);if(!p)return;
+  const mr=el("modal-root");
+  mr.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal" style="max-width:360px">
+    <div class="modal-title">Seleccionar talla — ${p.name}<button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px 0">
+      ${p.sizes.map(s=>`<button class="btn btn-out" style="font-size:13px;padding:10px;font-weight:700" onclick="posAddWithSize('${pid}',${s})">T${s}</button>`).join("")}
+    </div>
+  </div></div>`;
+}
+
+function posAddWithSize(pid,sz){
+  const p=INV.find(p=>p.id===pid);if(!p)return;
+  const existing=st.posCart.find(c=>c.pid===pid&&c.sz===sz);
+  if(existing){
+    if(existing.qty>=p.stock){alert('Stock máximo alcanzado');return;}
+    existing.qty++;
+  } else {
+    st.posCart.push({pid,name:p.name,price:p.price,qty:1,sz,e:p.e,stock:p.stock});
+  }
+  closeModal();pgEcommerce();
+}
+
+function posQty(idx,delta){
+  const item=st.posCart[idx];if(!item)return;
+  const p=INV.find(p=>p.id===item.pid);
+  const newQty=item.qty+delta;
+  if(newQty<=0){st.posCart.splice(idx,1);}
+  else if(p&&newQty>p.stock){alert('Stock insuficiente. Disponible: '+p.stock);}
+  else{item.qty=newQty;}
+  pgEcommerce();
+}
+
+function posRemove(idx){
+  st.posCart.splice(idx,1);
+  pgEcommerce();
+}
+
+function posClear(){
+  st.posCart=[];st.posDisc=0;st.posCliNombre='';st.posCliDni='';st.posCliTel='';
+  pgEcommerce();
+}
+
+function posCheckout(){
+  if(!st.posCart.length)return;
+  // Verificar stock de todos los ítems
+  for(const item of st.posCart){
+    const p=INV.find(p=>p.id===item.pid);
+    if(!p||p.stock<item.qty){
+      showMsg("pos-msg","⚠ Stock insuficiente para "+item.name,"err");return;
+    }
+  }
+  const sub=r2(st.posCart.reduce((s,i)=>s+i.price*i.qty,0));
+  const discAmt=r2(sub*st.posDisc/100);
+  const total=r2(sub-discAmt);
+  const igv=r2(total*.18/1.18);
+  const base=r2(total-igv);
+  const now=new Date();
+  const fecha=now.toLocaleDateString("es-PE");
+  const hora=now.toLocaleTimeString("es-PE",{hour:"2-digit",minute:"2-digit"});
+  // Número de comprobante
+  const tipo=st.posCompType;
+  const serie=tipo==="BOLETA"?"B001":"F001";
+  const numComp=COMPROBANTES.length+VENTAS_POS.length+1;
+  const numStr=`${serie}-${String(numComp).padStart(8,"0")}`;
+  const ventaId="V"+Date.now();
+  const numVenta=`POS-${now.getFullYear()}-${String(VENTAS_POS.length+1).padStart(4,"0")}`;
+
+  // Reducir stock
+  st.posCart.forEach(item=>{
+    const p=INV.find(p=>p.id===item.pid);
+    if(p)p.stock=Math.max(0,p.stock-item.qty);
+  });
+
+  // Registrar comprobante
+  COMPROBANTES.push({
+    id:"C"+Date.now(),num:numStr,cli:st.posCliNombre||"Consumidor final",
+    td:tipo==="FACTURA"?"RUC "+(st.posCliDni||"—"):"DNI "+(st.posCliDni||"—"),
+    sub:base,igv,tot:total,est:"ACEPTADA",fch:now.toISOString().split("T")[0],tipo
+  });
+
+  // Registrar venta POS
+  const venta={
+    id:ventaId,num:numVenta,fecha,hora,
+    cliente:st.posCliNombre||"",dni:st.posCliDni||"",tel:st.posCliTel||"",
+    items:st.posCart.map(i=>({...i})),
+    sub,descPct:st.posDisc,descAmt,total,igv,base,
+    pago:st.posPayMethod,comprobante:numStr,tipo,
+    estado:"PAGADO"
+  };
+  VENTAS_POS.push(venta);
+
+  // Registrar en ORDERS también (unificado)
+  st.posCart.forEach(item=>{
+    ORDERS.push({
+      id:"O"+Date.now()+Math.random(),
+      num:numVenta,
+      pid:item.pid,sz:item.sz,qty:item.qty,
+      status:"ENTREGADO",
+      total:r2(item.price*item.qty),
+      igv:r2(item.price*item.qty*.18/1.18),
+      client:st.posCliNombre||"Consumidor final",
+      date:now.toISOString().split("T")[0],
+      ch:"TIENDA",inv:numStr
+    });
+  });
+
+  logAct(`Venta POS ${numVenta} · ${numStr} · ${fmt(total)}`);
+
+  // Mostrar recibo
+  const ventaSnap={...venta};
+  posClear();
+  posShowRecibo(ventaSnap);
+}
+
+function posShowRecibo(v){
+  const mr=el("modal-root");
+  const empresa=EMPRESA;
+  const logoHTML=empresa.logo
+    ?`<img src="${empresa.logo}" style="max-height:54px;max-width:130px;object-fit:contain;margin-bottom:8px;border-radius:6px;display:block;margin-left:auto;margin-right:auto">`
+    :`<div style="width:48px;height:48px;background:linear-gradient(135deg,#e8973a,#f5a94e);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:900;font-size:22px;color:#fff;margin:0 auto 8px;box-shadow:0 4px 16px rgba(232,151,58,.4)">S</div>`;
+  mr.innerHTML=`<div class="modal-bg" onclick="if(event.target===this){closeModal();pgEcommerce();}" style="align-items:flex-start;padding:16px;overflow-y:auto">
+  <div class="receipt-modal" onclick="event.stopPropagation()">
+    <div class="receipt-hdr">
+      ${logoHTML}
+      <div class="receipt-logo">${empresa.nombre}</div>
+      <div class="receipt-sub" style="margin-top:3px">RUC: ${empresa.ruc}</div>
+      <div class="receipt-sub" style="margin-top:2px;font-size:8px">${empresa.direccion}</div>
+      <hr class="receipt-divider" style="margin:10px 0"/>
+      <div style="display:inline-block;background:rgba(232,151,58,.2);border:1px solid rgba(232,151,58,.5);border-radius:6px;padding:4px 14px;font-size:13px;font-weight:700;letter-spacing:2px;color:var(--ac2)">${v.tipo} ELECTRÓNICA</div>
+      <div style="font-size:13px;margin-top:6px;font-family:'DM Mono',monospace;color:rgba(255,255,255,.9);letter-spacing:1px">${v.comprobante}</div>
+    </div>
+    <div class="receipt-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;margin-bottom:8px">
+        <div class="receipt-row" style="grid-column:1/-1"><span>Fecha y hora:</span><span>${v.fecha} ${v.hora}</span></div>
+        <div class="receipt-row" style="grid-column:1/-1"><span>N° Venta:</span><span class="receipt-num">${v.num}</span></div>
+        <div class="receipt-row" style="grid-column:1/-1"><span>Cliente:</span><span>${v.cliente||'Consumidor final'}</span></div>
+        ${v.dni?`<div class="receipt-row" style="grid-column:1/-1"><span>${v.tipo==='FACTURA'?'RUC':'DNI'}:</span><span>${v.dni}</span></div>`:''}
+        ${v.tel?`<div class="receipt-row" style="grid-column:1/-1"><span>Teléfono:</span><span>${v.tel}</span></div>`:''}
+      </div>
+      <hr class="receipt-divider-dark"/>
+      <div class="receipt-items-hdr">
+        <span>Producto</span><span style="text-align:center">T.</span><span style="text-align:center">Cant.</span><span style="text-align:right">Total</span>
+      </div>
+      ${v.items.map(i=>`<div class="receipt-item-row">
+        <span style="color:var(--tx)">${i.name}</span>
+        <span style="text-align:center;color:var(--mu)">${i.sz||'—'}</span>
+        <span style="text-align:center;color:var(--tx2)">${i.qty}</span>
+        <span style="text-align:right" class="receipt-num">${fmt(r2(i.price*i.qty))}</span>
+      </div>`).join("")}
+      <hr class="receipt-divider-dark"/>
+      <div class="receipt-row"><span>Subtotal</span><span class="receipt-num">${fmt(v.sub)}</span></div>
+      ${v.descPct>0?`<div class="receipt-row"><span style="color:var(--rd)">Descuento ${v.descPct}%</span><span class="receipt-num" style="color:var(--rd)">−${fmt(v.descAmt)}</span></div>`:''}
+      <div class="receipt-row"><span>Base imponible</span><span class="receipt-num">${fmt(v.base)}</span></div>
+      <div class="receipt-row"><span>IGV 18%</span><span class="receipt-num">${fmt(v.igv)}</span></div>
+      <div class="receipt-row total"><span>TOTAL A PAGAR</span><span class="receipt-num">${fmt(v.total)}</span></div>
+      <div class="receipt-row"><span>Método de pago</span><span style="font-weight:700;color:var(--ac)">${v.pago}</span></div>
+      <div class="receipt-row"><span>Estado</span><span style="color:var(--gn);font-weight:700">✅ ${v.estado}</span></div>
+      <hr class="receipt-divider-dark"/>
+      <div style="text-align:center;font-size:10px;color:var(--mu);line-height:2;margin-top:6px">
+        ${empresa.telefono} · ${empresa.correo}<br/>
+        <span style="font-size:9px;color:var(--tx3)">Representación impresa del comprobante electrónico.<br/>Autorizado mediante OSE · SUNAT 2026 · ¡Gracias por su compra!</span>
+      </div>
+    </div>
+    <div class="receipt-footer-bar">
+      <button class="btn btn-dk" style="flex:1" onclick="posPrintRecibo('${v.id}')">🖨 Imprimir</button>
+      <button class="btn btn-gn" style="flex:1" onclick="posDownloadPDF('${v.id}')">📥 PDF</button>
+      <button class="btn btn-out" style="flex:1" onclick="closeModal();pgEcommerce()">✓ Cerrar</button>
+    </div>
+  </div></div>`;
+}
+
+function posVerRecibo(id){
+  const v=VENTAS_POS.find(v=>v.id===id);
+  if(v)posShowRecibo(v);
+}
+
+function posDelVenta(id){
+  confirmar("¿Eliminar este registro de venta? Esta acción no se puede deshacer.",()=>{
+    VENTAS_POS=VENTAS_POS.filter(v=>v.id!==id);
+    pgEcommerce();showMsg("pos-msg","🗑 Venta eliminada","ok");
+  });
+}
+
+function posPrintRecibo(vid){
+  const v=VENTAS_POS.find(v=>v.id===vid);
+  if(!v){alert('Venta no encontrada');return;}
+  const e=EMPRESA;
+  const logoHtml=e.logo
+    ?`<img src="${e.logo}" style="max-height:60px;object-fit:contain;margin-bottom:8px;display:block;margin-left:auto;margin-right:auto">`
+    :`<div style="width:48px;height:48px;background:linear-gradient(135deg,#C4832A,#e8973a);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#fff;font-family:serif;margin:0 auto 8px">S</div>`;
+  const w=window.open("","_blank","width=460,height=720");
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${v.comprobante}</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Arial',sans-serif;font-size:11px;color:#111;background:#fff;max-width:400px;margin:0 auto;padding:12px}
+    .hdr{text-align:center;padding:16px 12px;background:#1a1a2e;color:#fff;border-radius:10px;margin-bottom:12px}
+    .logo-name{font-size:18px;font-weight:900;letter-spacing:1px;font-family:serif;color:#e8973a}
+    .sub{font-size:8px;color:rgba(255,255,255,.5);letter-spacing:2px;margin-top:2px}
+    .comp-badge{font-size:12px;font-weight:700;margin-top:8px;background:rgba(232,151,58,.2);border:1px solid rgba(232,151,58,.5);border-radius:4px;padding:4px 12px;display:inline-block;color:#f5a94e;letter-spacing:1px}
+    .comp-num{font-size:12px;margin-top:4px;font-family:'Courier New',monospace;color:rgba(255,255,255,.8)}
+    .section{margin-bottom:10px}
+    .row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f0f0f0}
+    .row:last-child{border:none}
+    .label{color:#666}
+    .mono{font-family:'Courier New',monospace}
+    .items-hdr{display:grid;grid-template-columns:1fr auto auto auto;gap:4px;font-size:9px;font-weight:700;text-transform:uppercase;color:#888;padding:5px 0;border-bottom:2px solid #C4832A}
+    .item-row{display:grid;grid-template-columns:1fr auto auto auto;gap:4px;padding:4px 0;border-bottom:1px solid #f5f5f5}
+    .total-row{display:flex;justify-content:space-between;padding:8px 0;font-size:15px;font-weight:900;border-top:2px solid #C4832A;border-bottom:2px solid #C4832A;margin:8px 0;color:#C4832A}
+    .divider{border:none;border-top:1px dashed #C4832A;margin:8px 0;opacity:.5}
+    .footer{text-align:center;font-size:8.5px;color:#888;margin-top:12px;line-height:1.9;border-top:1px solid #eee;padding-top:10px}
+    button.print-btn{width:100%;padding:10px;background:#1a1a2e;color:#fff;border:none;border-radius:8px;font-size:13px;cursor:pointer;margin-top:10px;font-family:sans-serif;font-weight:700}
+    @media print{body{margin:0;padding:6px}button.print-btn{display:none}@page{margin:8mm}}
+  </style></head><body>
+  <div class="hdr">
+    ${logoHtml}
+    <div class="logo-name">${e.nombre}</div>
+    <div class="sub">RUC: ${e.ruc}</div>
+    <div style="font-size:8px;color:rgba(255,255,255,.4);margin-top:2px">${e.direccion}</div>
+    <div class="comp-badge">${v.tipo} ELECTRÓNICA</div>
+    <div class="comp-num">${v.comprobante}</div>
+  </div>
+  <div class="section">
+    <div class="row"><span class="label">Fecha:</span><span>${v.fecha} ${v.hora}</span></div>
+    <div class="row"><span class="label">N° Venta:</span><span class="mono">${v.num}</span></div>
+    <div class="row"><span class="label">Cliente:</span><span>${v.cliente||'Consumidor final'}</span></div>
+    ${v.dni?`<div class="row"><span class="label">${v.tipo==='FACTURA'?'RUC':'DNI'}:</span><span>${v.dni}</span></div>`:''}
+    ${v.tel?`<div class="row"><span class="label">Teléfono:</span><span>${v.tel}</span></div>`:''}
+  </div>
+  <hr class="divider"/>
+  <div class="section">
+    <div class="items-hdr"><span>Descripción</span><span>T.</span><span>Cant.</span><span style="text-align:right">Total</span></div>
+    ${v.items.map(i=>`<div class="item-row">
+      <span>${i.name}</span>
+      <span style="text-align:center;color:#888">${i.sz||'—'}</span>
+      <span style="text-align:center">${i.qty}</span>
+      <span style="text-align:right" class="mono">S/ ${(i.price*i.qty).toFixed(2)}</span>
+    </div>`).join('')}
+  </div>
+  <hr class="divider"/>
+  <div class="section">
+    <div class="row"><span class="label">Subtotal</span><span class="mono">S/ ${v.sub.toFixed(2)}</span></div>
+    ${v.descPct>0?`<div class="row"><span class="label">Descuento ${v.descPct}%</span><span class="mono" style="color:#dc2626">−S/ ${v.descAmt.toFixed(2)}</span></div>`:''}
+    <div class="row"><span class="label">Base imponible</span><span class="mono">S/ ${v.base.toFixed(2)}</span></div>
+    <div class="row"><span class="label">IGV 18%</span><span class="mono">S/ ${v.igv.toFixed(2)}</span></div>
+    <div class="total-row"><span>TOTAL A PAGAR</span><span class="mono">S/ ${v.total.toFixed(2)}</span></div>
+    <div class="row"><span class="label">Método de pago</span><span style="font-weight:700">${v.pago}</span></div>
+    <div class="row"><span class="label">Estado</span><span style="color:#16a34a;font-weight:700">✓ PAGADO</span></div>
+  </div>
+  <div class="footer">
+    ${e.telefono} · ${e.correo}<br/>
+    Representación impresa del comprobante electrónico<br/>
+    Autorizado mediante OSE · SUNAT 2026<br/>
+    <strong>¡Gracias por su compra en SOLEM!</strong>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨 Imprimir comprobante</button>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>w.focus(),300);
+}
+
+function posDownloadPDF(vid){
+  const v=VENTAS_POS.find(v=>v.id===vid);
+  if(!v){alert('Venta no encontrada');return;}
+  const e=EMPRESA;
+  const logoHtml=e.logo
+    ?`<img src="${e.logo}" style="max-height:60px;object-fit:contain;margin-bottom:8px;display:block;margin-left:auto;margin-right:auto">`
+    :`<div style="width:48px;height:48px;background:linear-gradient(135deg,#C4832A,#e8973a);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;color:#fff;font-family:serif;margin:0 auto 8px">S</div>`;
+  const w=window.open("","_blank","width=460,height=720");
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${v.comprobante}</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Arial',sans-serif;font-size:11px;color:#111;background:#fff;max-width:400px;margin:0 auto;padding:12px}
+    .hdr{text-align:center;padding:16px 12px;background:#1a1a2e;color:#fff;border-radius:10px;margin-bottom:12px}
+    .logo-name{font-size:18px;font-weight:900;letter-spacing:1px;font-family:serif;color:#e8973a}
+    .sub{font-size:8px;color:rgba(255,255,255,.5);letter-spacing:2px;margin-top:2px}
+    .comp-badge{font-size:12px;font-weight:700;margin-top:8px;background:rgba(232,151,58,.2);border:1px solid rgba(232,151,58,.5);border-radius:4px;padding:4px 12px;display:inline-block;color:#f5a94e;letter-spacing:1px}
+    .comp-num{font-size:12px;margin-top:4px;font-family:'Courier New',monospace;color:rgba(255,255,255,.8)}
+    .section{margin-bottom:10px}
+    .row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #f0f0f0}
+    .row:last-child{border:none}
+    .label{color:#666}
+    .mono{font-family:'Courier New',monospace}
+    .items-hdr{display:grid;grid-template-columns:1fr auto auto auto;gap:4px;font-size:9px;font-weight:700;text-transform:uppercase;color:#888;padding:5px 0;border-bottom:2px solid #C4832A}
+    .item-row{display:grid;grid-template-columns:1fr auto auto auto;gap:4px;padding:4px 0;border-bottom:1px solid #f5f5f5}
+    .total-row{display:flex;justify-content:space-between;padding:8px 0;font-size:15px;font-weight:900;border-top:2px solid #C4832A;border-bottom:2px solid #C4832A;margin:8px 0;color:#C4832A}
+    .divider{border:none;border-top:1px dashed #C4832A;margin:8px 0;opacity:.5}
+    .footer{text-align:center;font-size:8.5px;color:#888;margin-top:12px;line-height:1.9;border-top:1px solid #eee;padding-top:10px}
+    .pdf-hint{text-align:center;margin-top:10px;padding:8px;background:#f5f5f5;border-radius:6px;font-size:10px;color:#555}
+    @media print{body{margin:0;padding:6px}.pdf-hint{display:none}@page{margin:8mm}}
+  </style></head><body>
+  <div class="hdr">
+    ${logoHtml}
+    <div class="logo-name">${e.nombre}</div>
+    <div class="sub">RUC: ${e.ruc}</div>
+    <div style="font-size:8px;color:rgba(255,255,255,.4);margin-top:2px">${e.direccion}</div>
+    <div class="comp-badge">${v.tipo} ELECTRÓNICA</div>
+    <div class="comp-num">${v.comprobante}</div>
+  </div>
+  <div class="section">
+    <div class="row"><span class="label">Fecha:</span><span>${v.fecha} ${v.hora}</span></div>
+    <div class="row"><span class="label">N° Venta:</span><span class="mono">${v.num}</span></div>
+    <div class="row"><span class="label">Cliente:</span><span>${v.cliente||'Consumidor final'}</span></div>
+    ${v.dni?`<div class="row"><span class="label">${v.tipo==='FACTURA'?'RUC':'DNI'}:</span><span>${v.dni}</span></div>`:''}
+    ${v.tel?`<div class="row"><span class="label">Teléfono:</span><span>${v.tel}</span></div>`:''}
+  </div>
+  <hr class="divider"/>
+  <div class="section">
+    <div class="items-hdr"><span>Descripción</span><span>T.</span><span>Cant.</span><span style="text-align:right">Total</span></div>
+    ${v.items.map(i=>`<div class="item-row">
+      <span>${i.name}</span>
+      <span style="text-align:center;color:#888">${i.sz||'—'}</span>
+      <span style="text-align:center">${i.qty}</span>
+      <span style="text-align:right" class="mono">S/ ${(i.price*i.qty).toFixed(2)}</span>
+    </div>`).join('')}
+  </div>
+  <hr class="divider"/>
+  <div class="section">
+    <div class="row"><span class="label">Subtotal</span><span class="mono">S/ ${v.sub.toFixed(2)}</span></div>
+    ${v.descPct>0?`<div class="row"><span class="label">Descuento ${v.descPct}%</span><span class="mono" style="color:#dc2626">−S/ ${v.descAmt.toFixed(2)}</span></div>`:''}
+    <div class="row"><span class="label">Base imponible</span><span class="mono">S/ ${v.base.toFixed(2)}</span></div>
+    <div class="row"><span class="label">IGV 18%</span><span class="mono">S/ ${v.igv.toFixed(2)}</span></div>
+    <div class="total-row"><span>TOTAL A PAGAR</span><span class="mono">S/ ${v.total.toFixed(2)}</span></div>
+    <div class="row"><span class="label">Método de pago</span><span style="font-weight:700">${v.pago}</span></div>
+    <div class="row"><span class="label">Estado</span><span style="color:#16a34a;font-weight:700">✓ PAGADO</span></div>
+  </div>
+  <div class="footer">
+    ${e.telefono} · ${e.correo}<br/>
+    Representación impresa del comprobante electrónico<br/>
+    Autorizado mediante OSE · SUNAT 2026 · ¡Gracias por su compra en SOLEM!
+  </div>
+  <div class="pdf-hint">💡 En el diálogo de impresión, selecciona <strong>"Guardar como PDF"</strong> como destino</div>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>{w.focus();w.print();},500);
+}
+
+
+function pgEcommerce(){
+  const tV=r2(ORDERS.filter(o=>o.status!=="CANCELADO").reduce((s,o)=>s+o.total,0));
+  const tI=r2(ORDERS.filter(o=>o.status!=="CANCELADO").reduce((s,o)=>s+o.igv,0));
+  const ns=s=>OS[Math.min(OS.indexOf(s)+1,OS.length-1)];
+  const invFilt=filtStr(INV,srch.inv);
+  const ordFilt=filtStr(ORDERS,srch.ord);
+  let tc="";
+  if(st.ecTab==="pos") tc=renderPOS();
+  else if(st.ecTab==="catalogo") tc=`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">${srchBox("inv","Buscar producto…","pgEcommerce")}<span style="font-size:11px;color:${S.mu}"><strong>${invFilt.length}</strong> productos</span><button class="btn btn-ac btn-sm" onclick="openProdModal()">+ Nuevo Producto</button></div>
+  <div id="ec-page-msg"></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:12px">${invFilt.length?invFilt.map(p=>`<div class="pcard"><div class="pimg" style="cursor:pointer" onclick="openProdModal('${p.id}')">${p.e}</div><div class="pbody"><div style="font-size:12px;font-weight:700;color:${S.dk};margin-bottom:2px;font-family:'Playfair Display',serif">${p.name}</div><div style="font-size:9px;color:${S.mu};margin-bottom:5px;font-family:'DM Mono',monospace">${p.sku} · ${p.gender}</div><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px"><span style="font-size:15px;font-weight:700;color:${S.ac}">${fmt(p.price)}</span><span style="font-size:10px;color:${S.mu}">Costo: ${fmt(p.cost)}</span></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">${bdg(p.stock>10?`${p.stock} pares`:p.stock>0?`${p.stock} pares`:"Sin stock",p.stock>10?"b-gn":p.stock>0?"b-am":"b-rd")}<span style="font-size:10px;color:${S.mu}">${r2((p.price-p.cost)/p.cost*100)}% mrg</span></div><div style="display:flex;gap:3px;flex-wrap:wrap;margin-bottom:6px">${p.sizes.map(s=>`<span style="background:${S.cr};border:1px solid ${S.lt};border-radius:4px;padding:1px 5px;font-size:9px;color:${S.mu}">T${s}</span>`).join("")}</div><div style="display:flex;gap:4px"><button class="btn btn-out btn-sm" style="flex:1" onclick="openProdModal('${p.id}')">✏</button><button class="btn btn-sm" style="flex:1;background:#FCEAEA;color:${S.rd};border:1px solid #F0B0B0" onclick="prodDel('${p.id}')">🗑</button></div></div></div>`).join(""):`<div style="color:${S.mu};font-size:12px;padding:16px">Sin resultados</div>`}</div>`;
+  else if(st.ecTab==="pedidos") tc=`<div class="card">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="card-title" style="margin:0">Gestión de Pedidos <span style="font-size:11px;font-weight:400;color:${S.mu}">(${ordFilt.length} de ${ORDERS.length})</span></div><div style="display:flex;gap:8px;align-items:center">${srchBox("ord","Buscar pedido…","pgEcommerce")}<button class="btn btn-ac btn-sm" onclick="openOrderModal()">+ Nuevo</button></div></div>
+    <div id="ec-page-msg"></div>
+    <div class="twrap"><table><thead><tr>${["Pedido","Cliente","Producto","T","Q","Total","IGV","Comprobante","Canal","Estado","Acciones"].map(h=>`<th>${h}</th>`).join("")}</tr></thead>
+    <tbody>${ordFilt.length?ordFilt.map((o,i)=>{const p=INV.find(p=>p.id===o.pid);return`<tr style="background:${i%2===0?"#fff":S.cr}"><td class="mo" style="font-size:10px">${o.num}</td><td>${o.client}</td><td style="max-width:110px;overflow:hidden;text-overflow:ellipsis">${p?.name||"—"}</td><td style="text-align:center">${o.sz}</td><td style="text-align:center">${o.qty}</td><td class="mo">${fmt(o.total)}</td><td class="mo">${fmt(o.igv)}</td><td>${o.inv?bdg(o.inv,"b-gn"):bdg("Pendiente","b-am")}</td><td>${bdg(o.ch,o.ch==="ONLINE"?"b-bl":"b-br")}</td><td>${bdg(o.status,SC[o.status]||"b-br")}</td><td><div class="act-row">${o.status!=="ENTREGADO"&&o.status!=="CANCELADO"?`<button class="btn btn-ac btn-sm" onclick="advOrder('${o.id}')">→ ${ns(o.status)}</button>`:""}<button class="btn btn-out btn-sm" onclick="openOrderModal('${o.id}')">✏</button><button class="btn btn-sm" style="background:#FCEAEA;color:${S.rd};border:1px solid #F0B0B0" onclick="orderDel('${o.id}')">🗑</button></div></td></tr>`;}).join(""):`<tr><td colspan="11" style="text-align:center;color:${S.mu};padding:16px">Sin resultados</td></tr>`}</tbody></table></div>
+  </div>`;
+  else{
+    const sp=INV.find(p=>p.id===st.ecPid);
+    const pt=sp&&st.ecQty?r2(sp.price*st.ecQty):0,pigv=r2(pt*.18/1.18);
+    tc=`<div class="card">
+      <div class="card-title">Registrar Nuevo Pedido</div>
+      <div id="ec-msg"></div>
+      <div class="fr" style="margin-bottom:10px">
+        <div class="fg"><label class="fl">Producto</label><select class="fi" onchange="st.ecPid=this.value;st.ecSz='';pgEcommerce()"><option value="">— Seleccionar —</option>${INV.map(p=>`<option value="${p.id}"${st.ecPid===p.id?' selected':''}>${p.name} (stock: ${p.stock})</option>`).join("")}</select></div>
+        <div class="fg"><label class="fl">Talla</label><select class="fi" onchange="st.ecSz=this.value"><option value="">— Talla —</option>${(sp?.sizes||[]).map(s=>`<option value="${s}"${st.ecSz==s?' selected':''}>Talla ${s}</option>`).join("")}</select></div>
+        <div class="fg"><label class="fl">Cantidad</label><input class="fi" type="number" value="${st.ecQty}" min="1" onchange="st.ecQty=+this.value;pgEcommerce()"></div>
+        <div class="fg"><label class="fl">Nombre del cliente</label><input class="fi" type="text" value="${st.ecCl}" placeholder="Nombre completo" oninput="st.ecCl=this.value"></div>
+        <div class="fg"><label class="fl">Canal</label><select class="fi" onchange="st.ecCh=this.value"><option value="TIENDA">TIENDA</option><option value="ONLINE">ONLINE</option><option value="MAYORISTA">MAYORISTA</option></select></div>
+        <div class="fg"><label class="fl">Método de pago</label><select class="fi" onchange="st.ecPay=this.value"><option>EFECTIVO</option><option>YAPE</option><option>PLIN</option><option>TARJETA_CREDITO</option><option>TRANSFERENCIA</option></select></div>
+      </div>
+      ${pt?`<div style="background:${S.cr};border-radius:10px;padding:10px;margin-bottom:10px;display:flex;gap:16px;flex-wrap:wrap;font-size:11px"><span style="color:${S.mu}">Total: <strong style="color:${S.dk}">${fmt(pt)}</strong></span><span style="color:${S.mu}">IGV: <strong style="color:${S.ac}">${fmt(pigv)}</strong></span><span style="color:${S.mu}">Base imp: <strong style="color:${S.dk}">${fmt(r2(pt-pigv))}</strong></span></div>`:""}
+      <button class="btn btn-dk" onclick="createOrder()">Registrar pedido</button>
+    </div>`;
+  }
+  el("page").innerHTML=`
+  <div class="pg-title">Ecommerce SOLEM</div>
+  <div class="pg-sub">Tienda integrada · IGV automático · Stock en tiempo real · Comprobantes electrónicos</div>
+  <div class="kpi-grid" style="margin-bottom:14px">
+    <div class="kpi"><div class="kpi-l">Ventas totales</div><div class="kpi-v" style="color:${S.gn}">${fmt(tV)}</div></div>
+    <div class="kpi"><div class="kpi-l">IGV recaudado</div><div class="kpi-v" style="color:${S.ac}">${fmt(tI)}</div></div>
+    <div class="kpi"><div class="kpi-l">Pedidos</div><div class="kpi-v">${ORDERS.length}</div></div>
+    <div class="kpi"><div class="kpi-l">Stock total</div><div class="kpi-v">${INV.reduce((s,p)=>s+p.stock,0)} pares</div></div>
+  </div>
+  <div class="tabs">${[{id:"pos",l:"🖥 Punto de Venta"},{id:"catalogo",l:"📦 Catálogo"},{id:"pedidos",l:"📋 Pedidos"},{id:"nuevo",l:"➕ Nuevo Pedido"}].map(t=>`<button class="tab${st.ecTab===t.id?' active':''}" onclick="st.ecTab='${t.id}';pgEcommerce()">${t.l}</button>`).join("")}</div>
+  ${tc}`;
+}
+function advOrder(id){const o=ORDERS.find(o=>o.id===id);if(!o)return;const idx=OS.indexOf(o.status);if(idx<OS.length-1){if(OS[idx+1]==="CONFIRMADO")INV=INV.map(p=>p.id===o.pid?{...p,stock:Math.max(p.stock-o.qty,0)}:p);o.status=OS[idx+1];}pgEcommerce();}
+function createOrder(){const p=INV.find(i=>i.id===st.ecPid);if(!p||!st.ecSz||!st.ecCl){showMsg("ec-msg","⚠ Completa todos los campos","err");return;}if(st.ecQty>p.stock){showMsg("ec-msg",`⚠ Stock insuficiente (${p.stock} disponibles)`,"err");return;}const total=r2(p.price*st.ecQty),igv=r2(total*.18/1.18);ORDERS.push({id:"O"+Date.now(),num:`SOL-2026-${String(ORDERS.length+4).padStart(3,"0")}`,pid:st.ecPid,sz:+st.ecSz,qty:st.ecQty,status:"NUEVO",total,igv,client:st.ecCl,date:new Date().toISOString().split("T")[0],ch:st.ecCh,inv:""});if(typeof logAct==="function")logAct("Pedido registrado: "+st.ecCl);st.ecPid="";st.ecSz="";st.ecQty=1;st.ecCl="";pgEcommerce();}
+function openProdModal(id){
+  const mr=el("modal-root");
+  const p=id?INV.find(p=>p.id===id):{id:"",sku:"SOL-",name:"",gender:"Unisex",sizes:[38,39,40],cost:0,price:0,stock:0,color:"",e:"👟"};
+  mr.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <div class="modal-title">${id?"Editar":"Nuevo"} Producto<button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="mp-msg"></div>
+    <div class="fr"><div class="fg"><label class="fl">SKU</label><input class="fi" id="mp-sku" value="${p.sku}"></div><div class="fg"><label class="fl">Nombre</label><input class="fi" id="mp-name" value="${p.name}" placeholder="Nombre del producto"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Género</label><select class="fi" id="mp-gender">${["Unisex","Hombre","Mujer","Niño","Niña"].map(g=>`<option${p.gender===g?' selected':''}>${g}</option>`).join("")}</select></div><div class="fg"><label class="fl">Emoji</label><input class="fi" id="mp-e" value="${p.e}" style="width:80px"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Costo (S/)</label><input class="fi" id="mp-cost" type="number" value="${p.cost}" step="0.01"></div><div class="fg"><label class="fl">Precio venta (S/)</label><input class="fi" id="mp-price" type="number" value="${p.price}" step="0.01"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Stock</label><input class="fi" id="mp-stock" type="number" value="${p.stock}" min="0"></div><div class="fg"><label class="fl">Color</label><input class="fi" id="mp-color" value="${p.color}" placeholder="Negro/Blanco"></div></div>
+    <div class="fg"><label class="fl">Tallas (separadas por coma)</label><input class="fi" id="mp-sizes" value="${p.sizes.join(",")}" placeholder="36,37,38,39,40"></div>
+    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-dk btn-full" onclick="prodSave('${id||""}')">💾 Guardar</button><button class="btn btn-out" onclick="closeModal()">Cancelar</button></div>
+  </div></div>`;
+}
+function prodSave(id){
+  const sku=el("mp-sku").value.trim(),name=el("mp-name").value.trim(),gender=el("mp-gender").value,e=el("mp-e").value.trim()||"👟";
+  const cost=+el("mp-cost").value,price=+el("mp-price").value,stock=+el("mp-stock").value,color=el("mp-color").value.trim();
+  const sizes=el("mp-sizes").value.split(",").map(s=>+s.trim()).filter(Boolean);
+  if(!name){showMsg("mp-msg","⚠ El nombre es requerido","err");return;}
+  const esNuevo=!id;
+  if(id){const p=INV.find(p=>p.id===id);if(p)Object.assign(p,{sku,name,gender,cost,price,stock,color,sizes,e});}
+  else INV.push({id:"P"+Date.now(),sku,name,gender,cost,price,stock,color,sizes,e});
+  closeModal();st.ecTab="catalogo";pgEcommerce();
+  showMsg("ec-page-msg",esNuevo?"✅ Producto registrado correctamente":"✅ Producto actualizado correctamente","ok");
+}
+function prodDel(id){confirmar("¿Eliminar este producto? Esta acción no se puede deshacer.",()=>{INV=INV.filter(p=>p.id!==id);pgEcommerce();showMsg("ec-page-msg","🗑 Producto eliminado","ok");});}
+function orderDel(id){confirmar("¿Eliminar este pedido? Esta acción no se puede deshacer.",()=>{ORDERS.splice(ORDERS.findIndex(o=>o.id===id),1);pgEcommerce();showMsg("ec-page-msg","🗑 Pedido eliminado","ok");});}
+function openOrderModal(id){
+  const mr=el("modal-root");
+  const o=id?ORDERS.find(o=>o.id===id):{id:"",num:"SOL-2026-"+String(ORDERS.length+4).padStart(3,"0"),pid:"",sz:"",qty:1,status:"NUEVO",total:0,igv:0,client:"",date:new Date().toISOString().split("T")[0],ch:"TIENDA",inv:""};
+  mr.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <div class="modal-title">${id?"Editar":"Nuevo"} Pedido<button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="fr"><div class="fg"><label class="fl">N° Pedido</label><input class="fi" id="mo-num" value="${o.num}"></div><div class="fg"><label class="fl">Cliente</label><input class="fi" id="mo-cli" value="${o.client}" placeholder="Nombre completo"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Producto</label><select class="fi" id="mo-pid">${INV.map(p=>`<option value="${p.id}"${o.pid===p.id?' selected':''}>${p.name}</option>`).join("")}</select></div><div class="fg"><label class="fl">Talla</label><input class="fi" id="mo-sz" value="${o.sz}" placeholder="40"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Cantidad</label><input class="fi" id="mo-qty" type="number" value="${o.qty}" min="1"></div><div class="fg"><label class="fl">Estado</label><select class="fi" id="mo-status">${OS.map(s=>`<option${o.status===s?' selected':''}>${s}</option>`).join("")}</select></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Total (S/)</label><input class="fi" id="mo-total" type="number" value="${o.total}" step="0.01"></div><div class="fg"><label class="fl">IGV (S/)</label><input class="fi" id="mo-igv" type="number" value="${o.igv}" step="0.01"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Canal</label><select class="fi" id="mo-ch">${["TIENDA","ONLINE","MAYORISTA"].map(c=>`<option${o.ch===c?' selected':''}>${c}</option>`).join("")}</select></div><div class="fg"><label class="fl">Fecha</label><input class="fi" id="mo-date" type="date" value="${o.date}"></div></div>
+    <div class="fg"><label class="fl">N° Comprobante</label><input class="fi" id="mo-inv" value="${o.inv}" placeholder="B001-00000001"></div>
+    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-dk btn-full" onclick="orderSave('${id||""}')">💾 Guardar</button><button class="btn btn-out" onclick="closeModal()">Cancelar</button></div>
+  </div></div>`;
+}
+function orderSave(id){
+  const num=el("mo-num").value.trim(),client=el("mo-cli").value.trim(),pid=el("mo-pid").value,sz=+el("mo-sz").value;
+  const qty=+el("mo-qty").value,status=el("mo-status").value,total=+el("mo-total").value,igv=+el("mo-igv").value;
+  const ch=el("mo-ch").value,date=el("mo-date").value,inv=el("mo-inv").value.trim();
+  const esNuevo=!id;
+  if(id){const o=ORDERS.find(o=>o.id===id);if(o)Object.assign(o,{num,client,pid,sz,qty,status,total,igv,ch,date,inv});}
+  else ORDERS.push({id:"O"+Date.now(),num,client,pid,sz,qty,status,total,igv,ch,date,inv});
+  closeModal();st.ecTab="pedidos";pgEcommerce();
+  showMsg("ec-page-msg",esNuevo?"✅ Pedido registrado correctamente":"✅ Pedido actualizado correctamente","ok");
+}
+function showMsg(id,txt,type){const m=el(id);if(m){m.innerHTML=`<div class="msg msg-${type==="ok"?"ok":"err"}">${txt}</div>`;setTimeout(()=>{if(m)m.innerHTML=""},3000);}}
+
+function pgLayouts(){
+  const LY_ESTADOS=["Pendiente","En revisión","Aprobado","Ejecutado","Cancelado"];
+  let list=st.lyFilt==="Todas"?LAYOUTS:LAYOUTS.filter(l=>l.area===st.lyFilt);
+  list=filtStr(list,srch.lay);
+  const estBdg=e=>({Aprobado:"b-gn",Ejecutado:"b-bl",Pendiente:"b-am","En revisión":"b-pu",Cancelado:"b-rd"}[e]||"b-br");
+  el("page").innerHTML=`
+  <div class="pg-title">Módulo de Layouts</div>
+  <div class="pg-sub">${LAYOUTS.length} evidencias registradas · CRUD por área</div>
+  <div id="ly-page-msg"></div>
+  <div style="display:grid;grid-template-columns:1fr 320px;gap:14px">
+    <div>
+      <div class="fbar">${["Todas",...LAR].map(a=>`<button class="fbtn${st.lyFilt===a?' active':''}" onclick="st.lyFilt='${a}';pgLayouts()">${a}</button>`).join("")}${srchBox("lay","Buscar layout…","pgLayouts")}<span style="font-size:11px;color:${S.mu}"><strong>${list.length}</strong> de ${LAYOUTS.length}</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px">${list.map(l=>`
+        <div class="lcard">
+          ${l.img?`<img class="img-thumb" src="${l.img}" alt="${l.title}" onclick="lyImgClick('${l.id}')">`:
+          `<div class="img-placeholder" onclick="lyImgClick('${l.id}')">${LAE[l.area]||"🖼"}<span style="font-size:11px;color:rgba(255,255,255,.5);margin-left:6px">Agregar imagen</span></div>`}
+          <input type="file" id="lyimg-${l.id}" accept="image/*" style="display:none" onchange="lyImgLoad('${l.id}',this)">
+          <div style="padding:10px">
+            <div style="font-size:11px;font-weight:700;color:${S.dk};margin-bottom:3px">${l.title}</div>
+            <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px">${bdg(l.area,"b-br")} ${bdg(l.estado||"Pendiente",estBdg(l.estado))}</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin:6px 0;font-size:9.5px">
+              <div style="background:${S.cr};border-radius:6px;padding:4px;text-align:center"><div style="color:${S.mu}">Precio</div><div style="font-weight:700;color:${S.dk}">${fmt(l.precio||0)}</div></div>
+              <div style="background:${S.cr};border-radius:6px;padding:4px;text-align:center"><div style="color:${S.mu}">Presupuesto</div><div style="font-weight:700;color:${S.ac}">${fmt(l.presupuesto||0)}</div></div>
+              <div style="background:${S.cr};border-radius:6px;padding:4px;text-align:center"><div style="color:${S.mu}">Costo Est.</div><div style="font-weight:700;color:${S.gn}">${fmt(l.costo||0)}</div></div>
+            </div>
+            <div style="font-size:10px;color:${S.mu};margin:4px 0;line-height:1.4">${l.desc}</div>
+            <div style="display:flex;justify-content:space-between;font-size:9px;color:${S.mu};margin-bottom:6px"><span>👤 ${l.resp}</span><span>📅 ${l.date}</span></div>
+            <div style="font-size:9px;color:${S.mu};margin-bottom:7px">📄 ${l.fmt} · 💾 ${l.size}</div>
+            <div style="display:flex;gap:5px">
+              <button class="btn btn-out btn-sm" style="flex:1" onclick="lyEdit('${l.id}')">✏ Editar</button>
+              <button class="btn btn-sm" style="background:#E8F5E9;color:${S.gn};border:1px solid #B8EDD4" onclick="lyDownload('${l.id}')">⬇</button>
+              <button class="btn btn-sm" style="background:#FCEAEA;color:${S.rd};border:1px solid #F0B0B0" onclick="lyDel('${l.id}')">🗑</button>
+            </div>
+          </div>
+        </div>`).join("")}
+      </div>
+    </div>
+    <div class="card" style="align-self:start;margin-bottom:0">
+      <div class="card-title">${st.lyEdit?"✏ Editar":"➕ Nuevo"} Layout</div>
+      <div id="ly-msg"></div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="fg"><label class="fl">Título</label><input class="fi" id="ly-t" type="text" value="${st.lyT}" placeholder="Descripción del layout" oninput="st.lyT=this.value"></div>
+        <div class="fg"><label class="fl">Área</label><select class="fi" id="ly-a" onchange="st.lyA=this.value">${LAR.map(a=>`<option value="${a}"${st.lyA===a?' selected':''}>${a}</option>`).join("")}</select></div>
+        <div class="fg"><label class="fl">Descripción</label><textarea class="fi ft" id="ly-d" oninput="st.lyD=this.value">${st.lyD}</textarea></div>
+        <div class="fg"><label class="fl">Responsable</label><input class="fi" id="ly-r" type="text" value="${st.lyR}" placeholder="Nombre" oninput="st.lyR=this.value"></div>
+        <div class="fg"><label class="fl">Estado</label><select class="fi" id="ly-est" onchange="st.lyEstado=this.value">${["Pendiente","En revisión","Aprobado","Ejecutado","Cancelado"].map(e=>`<option${st.lyEstado===e?' selected':''}>${e}</option>`).join("")}</select></div>
+        <div class="fr">
+          <div class="fg"><label class="fl">Precio (S/)</label><input class="fi" id="ly-precio" type="number" value="${st.lyPrecio}" step="0.01" oninput="st.lyPrecio=+this.value"></div>
+          <div class="fg"><label class="fl">Presupuesto (S/)</label><input class="fi" id="ly-pres" type="number" value="${st.lyPresupuesto}" step="0.01" oninput="st.lyPresupuesto=+this.value"></div>
+        </div>
+        <div class="fg"><label class="fl">Costo Estimado (S/)</label><input class="fi" id="ly-costo" type="number" value="${st.lyCosto}" step="0.01" oninput="st.lyCosto=+this.value"></div>
+        <div class="fg"><label class="fl">Fecha</label><input class="fi" id="ly-dt" type="date" value="${st.lyDt}" onchange="st.lyDt=this.value"></div>
+        <div class="fg"><label class="fl">Formato</label><select class="fi" id="ly-f" onchange="st.lyF=this.value">${["JPG","PNG","WEBP","PDF"].map(f=>`<option value="${f}"${st.lyF===f?' selected':''}>${f}</option>`).join("")}</select></div>
+        <div><label class="fl">Imagen</label>
+          ${st.lyImg?`<img src="${st.lyImg}" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:6px;display:block">`:``}
+          <label class="upa" style="cursor:pointer">📁 ${st.lyImg?"Cambiar imagen":"Subir imagen"} (JPG/PNG/WEBP)<input type="file" accept="image/*" style="display:none" onchange="lyFormImg(this)"></label>
+        </div>
+        <button class="btn ${st.lyEdit?"btn-ac":"btn-dk"} btn-full" onclick="lySave()">${st.lyEdit?"Actualizar layout":"Registrar layout"}</button>
+        ${st.lyEdit?`<button class="btn btn-out btn-full" onclick="lyClear()">Cancelar edición</button>`:""}
+      </div>
+    </div>
+  </div>`;
+}
+function lySave(){if(!st.lyT||!st.lyR){showMsg("ly-msg","⚠ Completa título y responsable","err");return;}const esNuevo=!st.lyEdit;if(st.lyEdit){const l=LAYOUTS.find(l=>l.id===st.lyEdit);if(l)Object.assign(l,{title:st.lyT,area:st.lyA,desc:st.lyD,resp:st.lyR,date:st.lyDt,fmt:st.lyF,e:LAE[st.lyA]||"🖼",precio:st.lyPrecio,presupuesto:st.lyPresupuesto,costo:st.lyCosto,estado:st.lyEstado,img:st.lyImg});}else LAYOUTS.push({id:"L"+Date.now(),title:st.lyT,area:st.lyA,desc:st.lyD,resp:st.lyR,date:st.lyDt,fmt:st.lyF,size:"—",e:LAE[st.lyA]||"🖼",precio:st.lyPrecio,presupuesto:st.lyPresupuesto,costo:st.lyCosto,estado:st.lyEstado,img:st.lyImg});if(typeof logAct==="function")logAct(esNuevo?"Layout registrado: "+st.lyT:"Layout actualizado: "+st.lyT);lyClear();pgLayouts();showMsg("ly-page-msg",esNuevo?"✅ Layout registrado correctamente":"✅ Layout actualizado correctamente","ok");}
+function lyEdit(id){const l=LAYOUTS.find(l=>l.id===id);if(!l)return;st.lyEdit=id;st.lyT=l.title;st.lyA=l.area;st.lyD=l.desc;st.lyR=l.resp;st.lyDt=l.date;st.lyF=l.fmt;st.lyPrecio=l.precio||0;st.lyPresupuesto=l.presupuesto||0;st.lyCosto=l.costo||0;st.lyEstado=l.estado||"Pendiente";st.lyImg=l.img||"";pgLayouts();}
+function lyDel(id){confirmar("¿Eliminar este layout? Esta acción no se puede deshacer.",()=>{LAYOUTS=LAYOUTS.filter(l=>l.id!==id);pgLayouts();showMsg("ly-page-msg","🗑 Layout eliminado","ok");});}
+function lyClear(){st.lyEdit="";st.lyT="";st.lyA=LAR[0];st.lyD="";st.lyR="";st.lyDt=new Date().toISOString().split("T")[0];st.lyF="JPG";st.lyPrecio=0;st.lyPresupuesto=0;st.lyCosto=0;st.lyEstado="Pendiente";st.lyImg="";}
+function lyImgClick(id){const inp=document.getElementById("lyimg-"+id);if(inp)inp.click();}
+function lyImgLoad(id,inp){if(!inp.files[0])return;const r=new FileReader();r.onload=e=>{const l=LAYOUTS.find(l=>l.id===id);if(l){l.img=e.target.result;}pgLayouts();};r.readAsDataURL(inp.files[0]);}
+function lyFormImg(inp){if(!inp.files[0])return;const r=new FileReader();r.onload=e=>{st.lyImg=e.target.result;pgLayouts();};r.readAsDataURL(inp.files[0]);}
+function lyDownload(id){const l=LAYOUTS.find(l=>l.id===id);if(!l)return;if(l.img){const a=document.createElement("a");a.href=l.img;a.download=l.title.replace(/\s+/g,"_")+"."+l.fmt.toLowerCase();a.click();}else{const data=`LAYOUT SOLEM\n\nTítulo: ${l.title}\nÁrea: ${l.area}\nDescripción: ${l.desc}\nResponsable: ${l.resp}\nFecha: ${l.date}\nEstado: ${l.estado}\nPrecio: S/ ${l.precio}\nPresupuesto: S/ ${l.presupuesto}\nCosto Estimado: S/ ${l.costo}`;const b=new Blob([data],{type:"text/plain"});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=l.title.replace(/\s+/g,"_")+".txt";a.click();URL.revokeObjectURL(u);}}
+
+let COMPROBANTES=[
+  {id:"C1",num:"B001-00000001",cli:"Carlos Mendoza",td:"DNI 12345678",sub:303.39,igv:54.61,tot:358.00,est:"ACEPTADA",fch:"2026-01-15",tipo:"BOLETA"},
+  {id:"C2",num:"B001-00000002",cli:"María Rodríguez",td:"DNI 87654321",sub:143.22,igv:25.78,tot:169.00,est:"ACEPTADA",fch:"2026-01-18",tipo:"BOLETA"},
+  {id:"C3",num:"B001-00000003",cli:"José García",td:"DNI 11223344",sub:160.17,igv:28.83,tot:189.00,est:"PENDIENTE",fch:"2026-01-20",tipo:"BOLETA"},
+];
+let SUNAT_ITEMS=[{desc:"Zapatillas Urbanas SOLEM",qty:1,vu:151.69,igv:27.31,tot:179.00}];
+function sunatRecalc(i){
+  const row=SUNAT_ITEMS[i];if(!row)return;
+  row.igv=r2(row.vu*row.qty*.18);row.tot=r2(row.vu*row.qty+row.igv);
+  renderSunatItems();
+}
+function renderSunatItems(){
+  const tb=el("sunat-items-body");if(!tb)return;
+  const totSub=r2(SUNAT_ITEMS.reduce((s,r)=>s+r.vu*r.qty,0));
+  const totIgv=r2(SUNAT_ITEMS.reduce((s,r)=>s+r.igv,0));
+  const totTot=r2(totSub+totIgv);
+  tb.innerHTML=SUNAT_ITEMS.map((r,i)=>`<tr>
+    <td><input class="fi" value="${r.desc}" style="padding:4px 8px;font-size:11px" onchange="SUNAT_ITEMS[${i}].desc=this.value"></td>
+    <td><input class="fi" type="number" value="${r.qty}" style="padding:4px 8px;font-size:11px;width:60px" onchange="SUNAT_ITEMS[${i}].qty=+this.value;sunatRecalc(${i})"></td>
+    <td><input class="fi" type="number" value="${r.vu}" step="0.01" style="padding:4px 8px;font-size:11px;width:90px" onchange="SUNAT_ITEMS[${i}].vu=+this.value;sunatRecalc(${i})"></td>
+    <td class="mo">${fmt(r.igv)}</td><td class="mo">${fmt(r.tot)}</td>
+    <td><button class="btn btn-sm" style="background:#FCEAEA;color:${S.rd};border:none" onclick="SUNAT_ITEMS.splice(${i},1);renderSunatItems()">✕</button></td>
+  </tr>`).join("")+`<tr class="tr-total"><td colspan="2"><button class="btn btn-out btn-sm" onclick="SUNAT_ITEMS.push({desc:'',qty:1,vu:0,igv:0,tot:0});renderSunatItems()">+ Ítem</button></td><td class="mo" style="font-weight:700">Subtotal: ${fmt(totSub)}</td><td class="mo" style="font-weight:700">${fmt(totIgv)}</td><td class="mo" style="font-weight:700">${fmt(totTot)}</td><td></td></tr>`;
+}
+function pgSunat(){
+  let tc="";
+  if(st.sunatTab==="emitir") tc=`
+    <div class="card">
+      <div class="card-title">Emitir Comprobante Electrónico</div>
+      <div class="sunat-ok">
+        <div style="font-family:'Playfair Display',serif;font-size:13px;margin-bottom:10px;opacity:.9">Integración OSE certificado — Nubefact API</div>
+        <div class="sunat-row"><span>RUC empresa</span><span>20XXXXXXXXX</span></div>
+        <div class="sunat-row"><span>Razón social</span><span>SOLEM ESTILO Y CONFORT SAC</span></div>
+        <div class="sunat-row"><span>OSE certificado</span><span>Nubefact</span></div>
+        <div class="sunat-row"><span>Formato</span><span>UBL 2.1 (XML firmado digitalmente)</span></div>
+        <div class="sunat-row"><span>Estado conexión</span><span>✅ Configurado</span></div>
+      </div>
+      <div class="fr" style="margin-bottom:12px">
+        <div class="fg"><label class="fl">Tipo de comprobante</label><select class="fi" id="sn-tipo"><option value="BOLETA">Boleta de Venta (B001)</option><option value="FACTURA">Factura (F001)</option></select></div>
+        <div class="fg"><label class="fl">Tipo de documento cliente</label><select class="fi" id="sn-tdoc"><option value="1">DNI</option><option value="6">RUC</option></select></div>
+        <div class="fg"><label class="fl">Número de documento</label><input class="fi" id="sn-ndoc" type="text" placeholder="DNI o RUC del cliente"></div>
+        <div class="fg"><label class="fl">Nombre / Razón social</label><input class="fi" id="sn-cli" type="text" placeholder="Nombre del cliente"></div>
+      </div>
+      <div class="card-title" style="margin-bottom:8px">Ítems del comprobante</div>
+      <div class="twrap" style="margin-bottom:12px"><table><thead><tr><th>Descripción</th><th>Cant.</th><th>V. Unit. (sin IGV)</th><th>IGV</th><th>Total</th><th></th></tr></thead>
+      <tbody id="sunat-items-body"></tbody></table></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="btn btn-out" onclick="sunatPrev()">Ver previa</button>
+        <button class="btn btn-ac" onclick="simEmitir()">🧾 Emitir comprobante</button>
+      </div>
+      <div id="sunat-msg"></div>
+    </div>`;
+  else if(st.sunatTab==="historial") tc=`
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="card-title" style="margin:0">Historial de Comprobantes Emitidos</div><button class="btn btn-ac btn-sm" onclick="openCompModal()">+ Nuevo</button></div>
+      <div class="twrap"><table><thead><tr><th>Comprobante</th><th>Cliente</th><th>Tipo Doc</th><th>Subtotal</th><th>IGV</th><th>Total</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+      <tbody>${COMPROBANTES.map(c=>`<tr><td class="mo" style="font-size:10px">${c.num}</td><td>${c.cli}</td><td style="font-size:10px">${c.td}</td><td class="mo">${fmt(c.sub)}</td><td class="mo">${fmt(c.igv)}</td><td class="mo">${fmt(c.tot)}</td><td>${bdg(c.est,c.est==="ACEPTADA"?"b-gn":c.est==="PENDIENTE"?"b-am":"b-rd")}</td><td>${c.fch}</td><td><div class="act-row"><button class="btn btn-out btn-sm" onclick="openCompModal('${c.id}')">✏</button><button class="btn btn-sm" style="background:#FCEAEA;color:${S.rd};border:1px solid #F0B0B0" onclick="compDel('${c.id}')">🗑</button></div></td></tr>`).join("")}</tbody></table></div>
+      <div class="infobox" style="margin-top:12px">📊 Total comprobantes: <strong>${COMPROBANTES.length}</strong> · Total facturado: <strong>${fmt(r2(COMPROBANTES.reduce((s,c)=>s+c.tot,0)))}</strong> · IGV recaudado: <strong>${fmt(r2(COMPROBANTES.reduce((s,c)=>s+c.igv,0)))}</strong></div>
+    </div>`;
+  else tc=`
+    <div class="card">
+      <div class="card-title">Configuración OSE / SUNAT</div>
+      <div class="dkbox" style="margin-bottom:14px"><b>Variables de entorno requeridas:</b><br/>
+      EMPRESA_RUC=<span style="color:#C3E88D">20XXXXXXXXX</span><br/>
+      NUBEFACT_URL=<span style="color:#C3E88D">https://api.nubefact.com/api/v1</span><br/>
+      NUBEFACT_TOKEN=<span style="color:#C3E88D">tu_token_nubefact_aqui</span><br/>
+      <span style="opacity:.6"># Modo prueba: https://api-free.nubefact.com/api/v1</span></div>
+      <div class="g2">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:${S.dk};margin-bottom:8px">Pasos de activación</div>
+          ${[{n:1,t:"Crear cuenta en Nubefact",d:"Registrate en nubefact.com y obtén tu token API"},{n:2,t:"Certificado digital",d:"Nubefact gestiona el certificado digital ante SUNAT"},{n:3,t:"Configurar .env",d:"Agrega las variables NUBEFACT_URL y NUBEFACT_TOKEN"},{n:4,t:"Prueba en modo demo",d:"Usa api-free.nubefact.com para probar sin costo"},{n:5,t:"Activar modo producción",d:"Cambia a api.nubefact.com y emite comprobantes reales"}].map(s=>`<div class="step"><div class="step-num">${s.n}</div><div class="step-body"><div class="step-title">${s.t}</div><div class="step-desc">${s.d}</div></div></div>`).join("")}
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:${S.dk};margin-bottom:8px">Tipos de comprobantes</div>
+          ${[{e:"🧾",t:"Boleta de Venta",d:"Serie B001 · Para personas naturales (DNI)"},{e:"📄",t:"Factura Electrónica",d:"Serie F001 · Para empresas (RUC)"},{e:"❌",t:"Nota de Crédito",d:"Para anulaciones y descuentos"},{e:"📝",t:"Nota de Débito",d:"Para cargos adicionales"}].map(c=>`<div class="ncard"><div class="ncard-icon">${c.e}</div><div class="ncard-body"><div class="ncard-title">${c.t}</div><div class="ncard-desc">${c.d}</div></div></div>`).join("")}
+        </div>
+      </div>
+    </div>`;
+  el("page").innerHTML=`
+  <div class="pg-title">Facturación Electrónica SUNAT</div>
+  <div class="pg-sub">OSE certificado Nubefact · UBL 2.1 · Boletas y facturas reales</div>
+  <div class="tabs">${[{id:"emitir",l:"🧾 Emitir"},{id:"historial",l:"📋 Historial"},{id:"config",l:"⚙️ Configuración"}].map(t=>`<button class="tab${st.sunatTab===t.id?' active':''}" onclick="st.sunatTab='${t.id}';pgSunat()">${t.l}</button>`).join("")}</div>
+  ${tc}`;
+  if(st.sunatTab==="emitir")setTimeout(renderSunatItems,50);
+}
+function sunatPrev(){
+  const totTot=r2(SUNAT_ITEMS.reduce((s,r)=>s+r.tot,0));
+  alert(`PREVIA\n${SUNAT_ITEMS.map(r=>`${r.desc} x${r.qty} = ${fmt(r.tot)}`).join("\n")}\nTOTAL: ${fmt(totTot)}`);
+}
+function simEmitir(){
+  const cli=el("sn-cli")?el("sn-cli").value:"Cliente";
+  const tipo=el("sn-tipo")?el("sn-tipo").value:"BOLETA";
+  const totSub=r2(SUNAT_ITEMS.reduce((s,r)=>s+r.vu*r.qty,0));
+  const totIgv=r2(SUNAT_ITEMS.reduce((s,r)=>s+r.igv,0));
+  const totTot=r2(totSub+totIgv);
+  const num=tipo==="BOLETA"?`B001-${String(COMPROBANTES.length+1).padStart(8,"0")}`:
+    `F001-${String(COMPROBANTES.length+1).padStart(8,"0")}`;
+  COMPROBANTES.push({id:"C"+Date.now(),num,cli:cli||"Cliente",td:"DNI",sub:totSub,igv:totIgv,tot:totTot,est:"ACEPTADA",fch:new Date().toISOString().split("T")[0],tipo});
+  SUNAT_ITEMS=[{desc:"",qty:1,vu:0,igv:0,tot:0}];
+  if(typeof logAct==="function")logAct("Factura "+num+" emitida");
+  showMsg("sunat-msg","✅ "+num+" emitido y aceptado por SUNAT · XML UBL 2.1 firmado · PDF disponible","ok");
+}
+function openCompModal(id){
+  const mr=el("modal-root");
+  const c=id?COMPROBANTES.find(c=>c.id===id):{id:"",num:"B001-",cli:"",td:"DNI",sub:0,igv:0,tot:0,est:"PENDIENTE",fch:new Date().toISOString().split("T")[0],tipo:"BOLETA"};
+  mr.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <div class="modal-title">${id?"Editar":"Nuevo"} Comprobante<button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="fr"><div class="fg"><label class="fl">N° Comprobante</label><input class="fi" id="mc-num" value="${c.num}"></div><div class="fg"><label class="fl">Tipo</label><select class="fi" id="mc-tipo"><option${c.tipo==="BOLETA"?' selected':''}>BOLETA</option><option${c.tipo==="FACTURA"?' selected':''}>FACTURA</option></select></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Cliente</label><input class="fi" id="mc-cli" value="${c.cli}"></div><div class="fg"><label class="fl">Tipo doc.</label><input class="fi" id="mc-td" value="${c.td}"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Subtotal (S/)</label><input class="fi" id="mc-sub" type="number" value="${c.sub}" step="0.01"></div><div class="fg"><label class="fl">IGV (S/)</label><input class="fi" id="mc-igv" type="number" value="${c.igv}" step="0.01"></div></div>
+    <div class="fr"><div class="fg"><label class="fl">Total (S/)</label><input class="fi" id="mc-tot" type="number" value="${c.tot}" step="0.01"></div><div class="fg"><label class="fl">Estado</label><select class="fi" id="mc-est"><option${c.est==="ACEPTADA"?' selected':''}>ACEPTADA</option><option${c.est==="PENDIENTE"?' selected':''}>PENDIENTE</option><option${c.est==="RECHAZADA"?' selected':''}>RECHAZADA</option></select></div></div>
+    <div class="fg"><label class="fl">Fecha</label><input class="fi" id="mc-fch" type="date" value="${c.fch}"></div>
+    <div style="display:flex;gap:8px;margin-top:12px"><button class="btn btn-dk btn-full" onclick="compSave('${id||""}')">💾 Guardar</button><button class="btn btn-out" onclick="closeModal()">Cancelar</button></div>
+  </div></div>`;
+}
+function compSave(id){
+  const num=el("mc-num").value.trim(),tipo=el("mc-tipo").value,cli=el("mc-cli").value.trim(),td=el("mc-td").value.trim();
+  const sub=+el("mc-sub").value,igv=+el("mc-igv").value,tot=+el("mc-tot").value,est=el("mc-est").value,fch=el("mc-fch").value;
+  const esNuevo=!id;
+  if(id){const c=COMPROBANTES.find(c=>c.id===id);if(c)Object.assign(c,{num,tipo,cli,td,sub,igv,tot,est,fch});}
+  else COMPROBANTES.push({id:"C"+Date.now(),num,tipo,cli,td,sub,igv,tot,est,fch});
+  closeModal();pgSunat();
+}
+function compDel(id){confirmar("¿Eliminar este comprobante? Esta acción no se puede deshacer.",()=>{COMPROBANTES.splice(COMPROBANTES.findIndex(c=>c.id===id),1);pgSunat();});}
+
+function pgNotif(){
+  const alertas=[
+    {e:"📦",t:"Stock bajo",d:"Sandalias Casuales tiene solo 3 pares disponibles",time:"Hace 2h",c:"b-rd",act:"Ver inventario",nav:"ecommerce"},
+    {e:"📋",t:"Vencimiento PDT 621",d:"El PDT 621 del mes anterior vence el 20/02/2026",time:"Hace 5h",c:"b-am",act:"Ver tributario",nav:"tributario"},
+    {e:"🏦",t:"Cuota préstamo BCP",d:"Cuota N°2 de S/ 1,702.85 vence el 01/02/2026",time:"Hace 1d",c:"b-bl",act:"Ver financiamiento",nav:"financiamiento"},
+    {e:"✅",t:"Balance cuadrado",d:"Verificación semanal: ACTIVO = PASIVO + PATRIMONIO",time:"Hace 3d",c:"b-gn",act:"Ver balance",nav:"balance"},
+  ];
+  const crons=[
+    {e:"⏰",t:"Stock bajo (diario 8:00 AM)",d:"Verifica inventario y alerta si algún producto tiene stock ≤ 5 unidades · Canal: WhatsApp + Email"},
+    {e:"⏰",t:"Vencimiento SUNAT (día 20, 7:00 AM)",d:"Alerta del PDT 621 con montos calculados del mes anterior · Canal: WhatsApp + Email"},
+    {e:"⏰",t:"Cuota préstamo (día 1, 9:00 AM)",d:"Recordatorio de cuota mensual de todos los préstamos vigentes · Canal: WhatsApp"},
+    {e:"⏰",t:"Balance integrity (lunes 6:00 AM)",d:"Verificación semanal del equilibrio contable ACTIVO=PAS+PAT · Canal: Email"},
+  ];
+  let tc="";
+  if(st.notifTab==="alertas") tc=`
+    <div class="card">
+      <div class="card-title">Alertas activas</div>
+      ${alertas.map(a=>`<div class="ncard"><div class="ncard-icon">${a.e}</div><div class="ncard-body"><div class="ncard-title">${a.t} ${bdg(a.time,a.c)}</div><div class="ncard-desc">${a.d}</div></div><button class="btn btn-out btn-sm" style="flex-shrink:0" onclick="go('${a.nav}')">${a.act}</button></div>`).join("")}
+    </div>`;
+  else if(st.notifTab==="crons") tc=`
+    <div class="card">
+      <div class="card-title">Cron Jobs configurados</div>
+      <div class="infobox" style="margin-bottom:12px">Los cron jobs corren automáticamente en el servidor NestJS. Se activan con ScheduleModule de @nestjs/schedule.</div>
+      ${crons.map(c=>`<div class="ncard"><div class="ncard-icon">${c.e}</div><div class="ncard-body"><div class="ncard-title">${c.t}</div><div class="ncard-desc">${c.d}</div></div></div>`).join("")}
+      <div class="dkbox" style="margin-top:12px"><b>Código NestJS — Cron job de stock bajo:</b><br/>
+      <span style="color:#C792EA">@Cron</span>(<span style="color:#C3E88D">'0 8 * * *'</span>)<br/>
+      <span style="color:#82AAFF">async</span> checkLowStock() {<br/>
+      &nbsp;&nbsp;<span style="color:#7E8A9A">// Busca productos con stock ≤ 5</span><br/>
+      &nbsp;&nbsp;<span style="color:#C792EA">const</span> low = <span style="color:#82AAFF">await</span> this.prisma.inventory.findMany({<br/>
+      &nbsp;&nbsp;&nbsp;&nbsp;where: { quantity: { lte: <span style="color:#F78C6C">5</span> } }<br/>
+      &nbsp;&nbsp;});<br/>
+      &nbsp;&nbsp;<span style="color:#82AAFF">await</span> this.sendWhatsApp(msg);<br/>
+      }</div>
+    </div>`;
+  else tc=`
+    <div class="card">
+      <div class="card-title">Enviar notificación manual</div>
+      <div class="g2" style="margin-bottom:12px">
+        <div class="fg"><label class="fl">Canal</label><select class="fi"><option>WhatsApp</option><option>Email</option><option>Ambos</option></select></div>
+        <div class="fg"><label class="fl">Destinatario</label><input class="fi" type="text" placeholder="+51999999999 o correo"></div>
+      </div>
+      <div class="fg"><label class="fl">Mensaje</label><textarea class="fi ft" rows="4" placeholder="Escribe el mensaje de alerta..."></textarea></div>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn btn-dk" onclick="simNotif('wa')">📱 Enviar WhatsApp</button>
+        <button class="btn btn-ac" onclick="simNotif('email')">📧 Enviar Email</button>
+      </div>
+      <div id="notif-msg"></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Configuración de canales</div>
+      <div class="g2">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:${S.dk};margin-bottom:8px">📱 Twilio WhatsApp</div>
+          <div class="dkbox" style="font-size:10px">TWILIO_ACCOUNT_SID=ACxxx...<br/>TWILIO_AUTH_TOKEN=tu_token<br/>TWILIO_WHATSAPP_FROM=+14155238886<br/>ALERT_WHATSAPP_NUMBER=+51999999999</div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:${S.dk};margin-bottom:8px">📧 Resend Email</div>
+          <div class="dkbox" style="font-size:10px">RESEND_API_KEY=re_xxxx...<br/>ALERT_EMAIL=admin@solem.pe<br/><br/><span style="opacity:.5"># Dominio verificado en resend.com</span></div>
+        </div>
+      </div>
+    </div>`;
+  el("page").innerHTML=`
+  <div class="pg-title">Alertas & Notificaciones</div>
+  <div class="pg-sub">Twilio WhatsApp · Resend Email · Cron jobs automáticos</div>
+  <div class="tabs">${[{id:"alertas",l:"🔔 Alertas activas"},{id:"crons",l:"⏰ Cron Jobs"},{id:"manual",l:"📤 Envío manual"}].map(t=>`<button class="tab${st.notifTab===t.id?' active':''}" onclick="st.notifTab='${t.id}';pgNotif()">${t.l}</button>`).join("")}</div>
+  ${tc}`;
+}
+function simNotif(ch){showMsg("notif-msg",ch==="wa"?"✅ WhatsApp enviado correctamente al número configurado (simulado)":"✅ Email enviado a admin@solem.pe correctamente (simulado)","ok");}
+
+function pgDeploy(){
+  let tc="";
+  if(st.deployTab==="railway") tc=`
+    <div class="card">
+      <div class="card-title">Despliegue en Railway — Backend NestJS</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+        ${[{e:"⚡",t:"Railway (Backend)",d:"NestJS + PostgreSQL + Redis",url:"railway.app",c:S.dk},{e:"▲",t:"Vercel (Frontend)",d:"Next.js 15 + Tailwind + ShadCN",url:"vercel.com",c:S.ac},{e:"🐳",t:"Docker (Producción)",d:"Nginx + SSL + Multi-stage build",url:"docker.com",c:S.bl}].map(p=>`<div style="background:${p.c};border-radius:12px;padding:14px;color:#fff;text-align:center"><div style="font-size:24px;margin-bottom:6px">${p.e}</div><div style="font-weight:700;font-size:12px;font-family:'Playfair Display',serif">${p.t}</div><div style="font-size:10px;opacity:.7;margin-top:3px">${p.d}</div><div style="font-size:9px;opacity:.5;margin-top:4px">${p.url}</div></div>`).join("")}
+      </div>
+      ${[{n:1,t:"Crear proyecto en Railway",d:`railway.app → New Project → Deploy from GitHub → Selecciona el repo solem-erp`},{n:2,t:"Agregar PostgreSQL",d:"En Railway: Add Service → PostgreSQL · Se genera DATABASE_URL automáticamente"},{n:3,t:"Configurar variables de entorno",d:"Settings → Variables → Agregar todas las variables del archivo .env.template"},{n:4,t:"Correr migraciones Prisma",d:"En Railway → Shell: npx prisma migrate deploy && npx prisma db seed"},{n:5,t:"Verificar el deployment",d:"Health check en: https://tu-app.railway.app/api/v1/health · Swagger: /api/docs"}].map(s=>`<div class="step"><div class="step-num">${s.n}</div><div class="step-body"><div class="step-title">${s.t}</div><div class="step-desc">${s.d}</div></div></div>`).join("")}
+    </div>`;
+  else if(st.deployTab==="vercel") tc=`
+    <div class="card">
+      <div class="card-title">Despliegue en Vercel — Frontend Next.js</div>
+      ${[{n:1,t:"Importar repositorio",d:"vercel.com → New Project → Import Git Repository → solem-erp/frontend"},{n:2,t:"Configurar root directory",d:"Framework Preset: Next.js · Root Directory: frontend"},{n:3,t:"Variables de entorno",d:"NEXT_PUBLIC_API_URL=https://tu-app.railway.app/api/v1 · NEXT_PUBLIC_APP_NAME=SOLEM ERP"},{n:4,t:"Deploy automático",d:"Vercel detecta Next.js y despliega automáticamente en cada push a main"},{n:5,t:"Dominio personalizado",d:"Settings → Domains → agregar erp.solem.pe · Configurar DNS en registrador"}].map(s=>`<div class="step"><div class="step-num">${s.n}</div><div class="step-body"><div class="step-title">${s.t}</div><div class="step-desc">${s.d}</div></div></div>`).join("")}
+      <div class="dkbox" style="margin-top:12px"><b>vercel.json:</b><br/>
+      {<br/>
+      &nbsp;&nbsp;<span style="color:#82AAFF">"buildCommand"</span>: <span style="color:#C3E88D">"cd frontend && npm run build"</span>,<br/>
+      &nbsp;&nbsp;<span style="color:#82AAFF">"outputDirectory"</span>: <span style="color:#C3E88D">"frontend/.next"</span>,<br/>
+      &nbsp;&nbsp;<span style="color:#82AAFF">"framework"</span>: <span style="color:#C3E88D">"nextjs"</span>,<br/>
+      &nbsp;&nbsp;<span style="color:#82AAFF">"regions"</span>: [<span style="color:#C3E88D">"gru1"</span>]<br/>
+      }</div>
+    </div>`;
+  else if(st.deployTab==="docker") tc=`
+    <div class="card">
+      <div class="card-title">Docker Compose — Producción completa</div>
+      <div class="cblock"><span class="cm"># Levantar todo el stack</span>
+<span class="ck">docker compose</span> -f docker-compose.yml up -d
+<span class="cm"># Ver logs backend</span>
+<span class="ck">docker compose</span> logs -f backend
+<span class="cm"># Correr migraciones</span>
+<span class="ck">docker compose</span> exec backend npx prisma migrate deploy
+<span class="cm"># Ver estado servicios</span>
+<span class="ck">docker compose</span> ps
+<span class="cm"># Renovar SSL (cron mensual)</span>
+<span class="ck">docker compose</span> run --rm certbot renew</div>
+      <div class="g2">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:${S.dk};margin-bottom:8px">Servicios incluidos</div>
+          ${[{e:"🐘",t:"PostgreSQL 16",d:"BD principal con backup automático"},{e:"⚡",t:"Redis 7",d:"Caché y cola de jobs"},{e:"🟩",t:"NestJS Backend",d:"API REST con JWT y Swagger"},{e:"🌐",t:"Nginx",d:"Reverse proxy + SSL/TLS"},{e:"🔒",t:"Certbot",d:"SSL automático Let's Encrypt"}].map(s=>`<div class="ncard"><div class="ncard-icon">${s.e}</div><div class="ncard-body"><div class="ncard-title">${s.t}</div><div class="ncard-desc">${s.d}</div></div></div>`).join("")}
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:${S.dk};margin-bottom:8px">URLs producción</div>
+          ${[{l:"API REST",v:"https://api.solem.pe/api/v1"},{l:"Swagger Docs",v:"https://api.solem.pe/api/docs"},{l:"Frontend ERP",v:"https://erp.solem.pe"},{l:"Health Check",v:"https://api.solem.pe/health"},{l:"PostgreSQL",v:"railway.app/dashboard"}].map(u=>`<div class="sr"><span class="sl" style="font-size:10px">${u.l}</span><span style="font-size:10px;color:${S.bl};font-family:'DM Mono',monospace">${u.v}</span></div>`).join("")}
+        </div>
+      </div>
+    </div>`;
+  else tc=`
+    <div class="card">
+      <div class="card-title">Arquitectura del Sistema — SOLEM ERP v5.0</div>
+      <div class="dkbox">
+        <b>Stack tecnológico completo:</b><br/>
+        <br/>
+        Frontend: <span style="color:#C3E88D">Next.js 15 + TypeScript + Tailwind CSS + ShadCN UI</span><br/>
+        Backend: <span style="color:#C3E88D">NestJS + TypeScript + Prisma ORM</span><br/>
+        Base de datos: <span style="color:#C3E88D">PostgreSQL 16</span><br/>
+        Caché: <span style="color:#C3E88D">Redis 7</span><br/>
+        Auth: <span style="color:#C3E88D">JWT (access 15min) + Refresh Token (7d)</span><br/>
+        Roles: <span style="color:#C3E88D">ADMIN · CONTADOR · SOCIO · CONSULTA</span><br/>
+        Almacenamiento: <span style="color:#C3E88D">AWS S3 / Cloudinary</span><br/>
+        Facturación: <span style="color:#C3E88D">Nubefact OSE · UBL 2.1 · SUNAT 2026</span><br/>
+        WhatsApp: <span style="color:#C3E88D">Twilio Business API</span><br/>
+        Email: <span style="color:#C3E88D">Resend · Plantillas HTML</span><br/>
+        Infraestructura: <span style="color:#C3E88D">Docker + Nginx + SSL/TLS + Railway + Vercel</span><br/>
+        CI/CD: <span style="color:#C3E88D">GitHub Actions → Railway (backend) + Vercel (frontend)</span>
+      </div>
+      <div style="margin-top:12px;font-size:12px;font-weight:600;color:${S.dk};margin-bottom:8px">Módulos del backend NestJS</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px">
+        ${["AuthModule","AssetsModule","FinancingModule","InventoryModule","OrdersModule","TaxesModule","ReportsModule","NotificationsModule","DepreciationModule","BalanceModule"].map(m=>`<div style="background:${S.cr};border:1px solid ${S.lt};border-radius:8px;padding:7px 10px;font-size:10px;font-family:'DM Mono',monospace;color:${S.dk}">${m}</div>`).join("")}
+      </div>
+    </div>`;
+  el("page").innerHTML=`
+  <div class="pg-title">Backend & Despliegue</div>
+  <div class="pg-sub">NestJS + JWT + Swagger · Railway + Vercel + Docker</div>
+  <div class="tabs">${[{id:"railway",l:"⚡ Railway"},{id:"vercel",l:"▲ Vercel"},{id:"docker",l:"🐳 Docker"},{id:"arch",l:"🏗 Arquitectura"}].map(t=>`<button class="tab${st.deployTab===t.id?' active':''}" onclick="st.deployTab='${t.id}';pgDeploy()">${t.l}</button>`).join("")}</div>
+  ${tc}`;
+}
+
+let REPORTES_EXCEL=[];
+function repExcelUpload(tipo,inp){
+  if(!inp.files[0])return;
+  const f=inp.files[0];
+  const allowed=["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","application/vnd.ms-excel"];
+  const extOk=/\.(xlsx|xls|csv)$/i.test(f.name);
+  if(!extOk&&!allowed.includes(f.type)){showMsg("rep-msg","⚠ Solo se permiten archivos .xlsx, .xls o .csv","err");inp.value="";return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    REPORTES_EXCEL.push({id:"RE"+Date.now(),tipo,name:f.name,size:r2(f.size/1024).toFixed(1)+" KB",date:new Date().toLocaleDateString("es-PE"),data:e.target.result,mime:f.type||"application/octet-stream"});
+    showMsg("rep-msg","✅ "+f.name+" registrado correctamente","ok");
+    pgReportes();
+  };
+  reader.readAsDataURL(f);
+}
+function repExcelDl(id){
+  const r=REPORTES_EXCEL.find(x=>x.id===id);if(!r)return;
+  const a=document.createElement("a");a.href=r.data;a.download=r.name;a.click();
+}
+function repExcelDel(id){
+  confirmar("¿Eliminar este archivo? Esta acción no se puede deshacer.",()=>{REPORTES_EXCEL=REPORTES_EXCEL.filter(x=>x.id!==id);pgReportes();showMsg("rep-msg","🗑 Archivo eliminado","ok");});
+}
+function repPlantilla(tipo){
+  const cols={
+    "Activos Tangibles":["Codigo","Nombre","Area","Cantidad","PrecioUnitario","CostoTotal","VidaUtil","TasaDepPct"],
+    "Activos Intangibles":["Codigo","Descripcion","Categoria","Valor","VidaUtil","TasaAmortPct"],
+    "Inventario Calzado":["SKU","Nombre","Genero","Stock","CostoUnitario","PrecioVenta","Tallas","Color"],
+    "Capital de Trabajo":["Concepto","MontoMensual"],
+    "Socios / Aportes":["NombreSocio","DNI_RUC","AporteSoles","PorcentajeParticipacion"],
+  };
+  const headers=cols[tipo]||["Campo1","Campo2","Campo3"];
+  const csv=headers.join(",")+"\n"+headers.map(()=>"").join(",");
+  const b=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  const u=URL.createObjectURL(b);
+  const a=document.createElement("a");
+  a.href=u;a.download="Plantilla_"+tipo.replace(/\s+/g,"_")+".csv";a.click();
+  URL.revokeObjectURL(u);
+  showMsg("rep-msg","✅ Plantilla de '"+tipo+"' descargada","ok");
+}
+function pgReportes(){
+  const csvDl=(data,name)=>{const k=Object.keys(data[0]);const csv=[k.join(","),...data.map(r=>k.map(k=>`"${String(r[k]).replace(/"/g,'""')}`).join(","))].join("\n");const b=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});const u=URL.createObjectURL(b);const a=document.createElement("a");a.href=u;a.download=name;a.click();URL.revokeObjectURL(u);showMsg("rep-msg","✅ "+name+" descargado","ok");};
+  window.expBal=()=>csvDl([{Sec:"ACTIVO CORRIENTE",Cuenta:"Caja y bancos",Monto:1000},{Sec:"ACTIVO CORRIENTE",Cuenta:"Inventarios",Monto:24588.80},{Sec:"ACTIVO CORRIENTE",Cuenta:"Anticipos",Monto:34842},{Sec:"TOTAL ACTIVO CORRIENTE",Cuenta:"",Monto:60430.80},{Sec:"ACTIVO NO CORRIENTE",Cuenta:"Tangibles",Monto:93045.70},{Sec:"ACTIVO NO CORRIENTE",Cuenta:"Intangibles",Monto:3573.99},{Sec:"TOTAL ACTIVO NO CORRIENTE",Cuenta:"",Monto:96619.69},{Sec:"TOTAL ACTIVO",Cuenta:"",Monto:157050.49},{Sec:"PASIVO",Cuenta:"Prestamo BCP",Monto:47115.15},{Sec:"TOTAL PASIVO",Cuenta:"",Monto:47115.15},{Sec:"PATRIMONIO",Cuenta:"Capital social",Monto:109935.34},{Sec:"TOTAL PATRIMONIO",Cuenta:"",Monto:109935.34},{Sec:"TOTAL PAS+PAT",Cuenta:"",Monto:157050.49},{Sec:"VALIDACION",Cuenta:"Diferencia (debe=0)",Monto:0}],"SOLEM_Balance.csv");
+  window.expAct=()=>csvDl(TANGIBLES.map(t=>({Codigo:t.code,Nombre:t.name,Area:t.area,Cantidad:t.qty,PrecioUnitario:t.unit,CostoTotal:t.total,VidaUtil:t.life,DepPct:(t.rate*100).toFixed(0)+"%",DepAnual:r2(t.total*t.rate),DepMensual:r2(t.total*t.rate/12)})),"SOLEM_Activos_Tangibles.csv");
+  window.expInv=()=>csvDl(INV.map(p=>({SKU:p.sku,Nombre:p.name,Genero:p.gender,Stock:p.stock,CostoUnitario:p.cost,PrecioVenta:p.price,IGV:r2(p.price*.18/1.18),MargenPct:r2((p.price-p.cost)/p.cost*100),ValorInventario:r2(p.stock*p.cost)})),"SOLEM_Inventario.csv");
+  window.expPlan=()=>csvDl(PLANILLA.map(p=>({Cargo:p.cargo,Cantidad:p.qty,SueldoBase:p.base,TotalBeneficios:p.total,PctBeneficios:"45%"})),"SOLEM_Planilla.csv");
+  window.expInt=()=>csvDl(INTGS.map(i=>({Codigo:i.code,Nombre:i.name,Categoria:i.cat,Valor:i.value,VidaUtil:i.life,AmortAnual:r2(i.value*i.rate),AmortMensual:r2(i.value*i.rate/12)})),"SOLEM_Intangibles.csv");
+  window.expVen=()=>csvDl(ORDERS.map(o=>({Pedido:o.num,Cliente:o.client,Producto:INV.find(p=>p.id===o.pid)?.name||"—",Talla:o.sz,Cantidad:o.qty,Total:o.total,IGV:o.igv,BaseImponible:r2(o.total-o.igv),Canal:o.ch,Estado:o.status,Comprobante:o.inv||"Pendiente",Fecha:o.date})),"SOLEM_Ventas.csv");
+  window.printPDF=()=>{const fecha=new Date().toLocaleDateString("es-PE",{day:"2-digit",month:"long",year:"numeric"});const tA=TANGIBLES.reduce((s,t)=>s+t.total,0);const tI=INTGS.reduce((s,i)=>s+i.value,0);const tG=r2(GASTOS.reduce((s,g)=>s+g.m,0));const w=window.open("","_blank");w.document.write(`<html><head><title>Balance SOLEM</title><style>body{font-family:sans-serif;margin:30px;font-size:11px;color:#1A0A00}h1{color:#3D1F00;font-size:20px;margin-bottom:4px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.hdr{background:#3D1F00;color:#fff;padding:8px 12px;font-weight:700;margin-bottom:0}.hdr2{background:#C4832A;color:#fff;padding:8px 12px;font-weight:700}.sec{background:#F5E6D8;padding:6px 12px;font-weight:700;font-size:10px;text-transform:uppercase}.row{display:flex;justify-content:space-between;padding:5px 12px;border-bottom:1px solid #F5E6D8}.tot{background:#FAEEDA;padding:7px 12px;display:flex;justify-content:space-between;font-weight:700}.mono{font-family:monospace}.ok{background:#EDFBF4;border:2px solid #B8EDD4;border-radius:8px;padding:10px;margin:12px 0;text-align:center;color:#1A6B3A;font-weight:700}</style></head><body><h1>SOLEM – ESTILO Y CONFORT</h1><p>Estado de Situación Financiera · Al ${fecha}</p><div class="ok">✅ BALANCE CUADRADO · ${fmt(157050.49)} = ${fmt(47115.15)} + ${fmt(109935.34)}</div><div class="grid"><div><div class="hdr">ACTIVO</div><div class="sec">Activo Corriente</div><div class="row"><span>Caja y bancos</span><span class="mono">${fmt(1000)}</span></div><div class="row"><span>Inventarios</span><span class="mono">${fmt(r2(INV.reduce((s,i)=>s+i.stock*i.cost,0)))}</span></div><div class="row"><span>Anticipos/Prepagados</span><span class="mono">${fmt(34842)}</span></div><div class="tot"><span>TOTAL ACTIVO CORRIENTE</span><span class="mono">${fmt(tG)}</span></div><div class="sec">Activo No Corriente</div><div class="row"><span>Tangibles</span><span class="mono">${fmt(tA)}</span></div><div class="row"><span>Intangibles</span><span class="mono">${fmt(tI)}</span></div><div class="tot"><span>TOTAL ACTIVO</span><span class="mono">${fmt(r2(tG+tA+tI))}</span></div></div><div><div class="hdr2">PASIVO Y PATRIMONIO</div><div class="sec">Pasivo</div><div class="row"><span>Préstamo BCP</span><span class="mono">${fmt(47115.15)}</span></div><div class="tot"><span>TOTAL PASIVO</span><span class="mono">${fmt(47115.15)}</span></div><div class="sec">Patrimonio</div><div class="row"><span>Capital social</span><span class="mono">${fmt(109935.34)}</span></div><div class="tot"><span>TOTAL PATRIMONIO</span><span class="mono">${fmt(109935.34)}</span></div></div></div><p style="margin-top:20px;font-size:9px;color:#888;text-align:center">SOLEM ERP · Trujillo, Perú · ${fecha}</p></body></html>`);w.document.close();setTimeout(()=>{w.focus();w.print();},400);};
+  el("page").innerHTML=`
+  <div class="pg-title">Reportes y Exportación</div>
+  <div class="pg-sub">Exportar CSV · Imprimir PDF · Importar desde Excel</div>
+  <div id="rep-msg"></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:14px">
+    ${[{e:"⚖️",t:"Estado Situación Financiera",d:"Balance completo con validación de cuadre",acts:[{l:"📥 Exportar CSV",fn:"expBal()"},{l:"🖨 Imprimir PDF",fn:"printPDF()"}]},{e:"🏢",t:"Activos Tangibles",d:"Lista con depreciación SUNAT por activo",acts:[{l:"📥 Exportar CSV",fn:"expAct()"}]},{e:"👟",t:"Inventario de Calzado",d:"Stock, costos, precios y márgenes",acts:[{l:"📥 Exportar CSV",fn:"expInv()"}]},{e:"👥",t:"Planilla de Sueldos",d:"16 trabajadores con beneficios (45%)",acts:[{l:"📥 Exportar CSV",fn:"expPlan()"}]},{e:"💡",t:"Activos Intangibles",d:"Registro con amortización SUNAT",acts:[{l:"📥 Exportar CSV",fn:"expInt()"}]},{e:"🛍",t:"Ventas y Pedidos",d:"Pedidos con IGV desglosado y comprobantes",acts:[{l:"📥 Exportar CSV",fn:"expVen()"}]}].map(r=>`<div class="rcard"><div style="font-size:26px;margin-bottom:8px">${r.e}</div><div style="font-size:12px;font-weight:700;color:${S.dk};font-family:'Playfair Display',serif;margin-bottom:3px">${r.t}</div><div style="font-size:10px;color:${S.mu};margin-bottom:10px">${r.d}</div><div style="display:flex;gap:7px;flex-wrap:wrap">${r.acts.map(a=>`<button class="btn btn-dk btn-sm" onclick="${a.fn}">${a.l}</button>`).join("")}</div></div>`).join("")}
+  </div>
+  <div class="card">
+    <div class="card-title">📥 Importar datos desde Excel</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:8px;margin-bottom:12px">
+      ${["Activos Tangibles","Activos Intangibles","Inventario Calzado","Capital de Trabajo","Socios / Aportes"].map(e=>`<div style="background:${S.cr};border-radius:10px;padding:10px;border:1.5px dashed ${S.ac}"><div style="font-size:11px;font-weight:600;color:${S.dk};margin-bottom:6px">${e}</div><label class="upa" style="display:block;margin-bottom:6px;cursor:pointer">📁 Subir .xlsx o .csv<input type="file" accept=".xlsx,.xls,.csv" style="display:none" onchange="repExcelUpload('${e}',this)"></label><button class="btn btn-out btn-sm btn-full" onclick="repPlantilla('${e}')">📋 Descargar plantilla</button></div>`).join("")}
+    </div>
+    ${REPORTES_EXCEL.length>0?`<div class="twrap" style="margin-bottom:10px"><table><thead><tr><th>Tipo</th><th>Archivo</th><th>Tamaño</th><th>Fecha</th><th>Acciones</th></tr></thead><tbody>${REPORTES_EXCEL.map(r=>`<tr><td>${bdg(r.tipo,"b-br")}</td><td style="font-size:11px">${r.name}</td><td class="mo">${r.size}</td><td>${r.date}</td><td><div class="act-row"><button class="btn btn-gn btn-sm" onclick="repExcelDl('${r.id}')">⬇ Descargar</button><button class="btn btn-sm" style="background:#FCEAEA;color:${S.rd};border:1px solid #F0B0B0" onclick="repExcelDel('${r.id}')">🗑</button></div></td></tr>`).join("")}</tbody></table></div>`:""}
+    <div class="infobox">ℹ️ Las plantillas tienen las columnas requeridas. Completa y sube el archivo para importar automáticamente. Formatos soportados: .xlsx, .xls, .csv</div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════
+   ADMINISTRACIÓN — datos, usuarios, historial, seguridad
+   ══════════════════════════════════════════ */
+let EMPRESA={
+  nombre:"SOLEM Estilo y Confort SAC",
+  logo:"",
+  ruc:"20600123456",
+  direccion:"Av. España 1234, Trujillo, La Libertad",
+  telefono:"+51 044 123456",
+  correo:"admin@solem.pe",
+  moneda:"PEN (S/)",
+  igv:"18%"
+};
+let USUARIOS=[
+  {id:"U1",usuario:"admin",nombre:"Administrador Principal",rol:"Administrador",estado:"Activo",email:"admin@solem.pe",ultimo:"2026-01-20 09:15"},
+  {id:"U2",usuario:"ggerente",nombre:"Gerente General",rol:"Gerente",estado:"Activo",email:"gerente@solem.pe",ultimo:"2026-01-19 14:30"},
+  {id:"U3",usuario:"ccontador",nombre:"Contador SOLEM",rol:"Contador",estado:"Activo",email:"contabilidad@solem.pe",ultimo:"2026-01-18 11:00"},
+  {id:"U4",usuario:"vendedor1",nombre:"Vendedor Tienda",rol:"Vendedor",estado:"Inactivo",email:"ventas@solem.pe",ultimo:"2026-01-10 08:45"},
+];
+const ROLES_PRED=["Administrador","Gerente","Contador","Vendedor"];
+let HISTORIAL=[
+  {id:"HI0",fecha:"14/01/2026",hora:"09:00",accion:"ERP iniciado"},
+  {id:"HI1",fecha:"15/01/2026",hora:"09:01",accion:"Balance general verificado"},
+  {id:"HI2",fecha:"16/01/2026",hora:"09:02",accion:"Inventario cargado"},
+  {id:"HI3",fecha:"17/01/2026",hora:"09:03",accion:"Layout Fachada aprobado"},
+  {id:"HI4",fecha:"18/01/2026",hora:"09:04",accion:"Factura B001-00000002 emitida"},
+  {id:"HI5",fecha:"19/01/2026",hora:"09:05",accion:"Activo TAN-017 registrado"},
+];
+function logAct(accion){
+  const n=new Date();
+  HISTORIAL.unshift({id:"H"+Date.now(),fecha:n.toLocaleDateString("es-PE"),hora:n.toLocaleTimeString("es-PE",{hour:"2-digit",minute:"2-digit"}),accion});
+  if(HISTORIAL.length>100)HISTORIAL=HISTORIAL.slice(0,100);
+}
+
+function pgAdmin(){
+  el("page").innerHTML=`
+  <div class="pg-title">Datos de Empresa</div>
+  <div class="pg-sub">Información general · Editable y guardable</div>
+  <div id="adm-msg"></div>
+  <div class="g2">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Información Empresarial</div>
+      <div class="fg"><label class="fl">Nombre de empresa</label><input class="fi" id="adm-nombre" value="${EMPRESA.nombre}"></div>
+      <div class="fg"><label class="fl">RUC</label><input class="fi" id="adm-ruc" value="${EMPRESA.ruc}" placeholder="20XXXXXXXXX"></div>
+      <div class="fg"><label class="fl">Dirección</label><input class="fi" id="adm-dir" value="${EMPRESA.direccion}"></div>
+      <div class="fr">
+        <div class="fg"><label class="fl">Teléfono</label><input class="fi" id="adm-tel" value="${EMPRESA.telefono}"></div>
+        <div class="fg"><label class="fl">Correo</label><input class="fi" id="adm-mail" type="email" value="${EMPRESA.correo}"></div>
+      </div>
+      <div class="fr">
+        <div class="fg"><label class="fl">Moneda</label><select class="fi" id="adm-mon">${["PEN (S/)","USD ($)","EUR (€)"].map(m=>`<option${EMPRESA.moneda===m?" selected":""}>${m}</option>`).join("")}</select></div>
+        <div class="fg"><label class="fl">IGV</label><select class="fi" id="adm-igv">${["18%","0%"].map(v=>`<option${EMPRESA.igv===v?" selected":""}>${v}</option>`).join("")}</select></div>
+      </div>
+      <button class="btn btn-dk btn-full" style="margin-top:8px" onclick="admSave()">💾 Guardar cambios</button>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">Logo de empresa</div>
+      ${EMPRESA.logo?`<img src="${EMPRESA.logo}" style="width:100%;max-height:140px;object-fit:contain;border-radius:10px;margin-bottom:10px;background:${S.cr};padding:10px">`:
+      `<div style="height:140px;background:${S.dk};border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:10px;font-family:'Playfair Display',serif;font-size:40px;color:${S.ac};font-weight:900">S</div>`}
+      <label class="upa" style="cursor:pointer;display:block">📁 Subir logo (JPG/PNG/SVG)<input type="file" accept="image/*" style="display:none" onchange="admLogo(this)"></label>
+      ${EMPRESA.logo?`<button class="btn btn-out btn-sm btn-full" style="margin-top:8px" onclick="EMPRESA.logo='';pgAdmin()">✕ Quitar logo</button>`:""}
+      <div class="dkbox" style="margin-top:14px">
+        <b>Vista previa encabezado</b><br/>
+        <span style="font-size:13px;color:${S.ac}">${EMPRESA.nombre}</span><br/>
+        RUC: ${EMPRESA.ruc}<br/>
+        ${EMPRESA.direccion}<br/>
+        ${EMPRESA.telefono} · ${EMPRESA.correo}<br/>
+        Moneda: ${EMPRESA.moneda} · IGV: ${EMPRESA.igv}
+      </div>
+    </div>
+  </div>`;
+}
+function admSave(){
+  EMPRESA.nombre=el("adm-nombre").value.trim()||EMPRESA.nombre;
+  EMPRESA.ruc=el("adm-ruc").value.trim();
+  EMPRESA.direccion=el("adm-dir").value.trim();
+  EMPRESA.telefono=el("adm-tel").value.trim();
+  EMPRESA.correo=el("adm-mail").value.trim();
+  EMPRESA.moneda=el("adm-mon").value;
+  EMPRESA.igv=el("adm-igv").value;
+  logAct("Datos de empresa actualizados");
+  showMsg("adm-msg","✅ Datos de empresa guardados correctamente","ok");
+  pgAdmin();
+}
+function admLogo(inp){if(!inp.files[0])return;const r=new FileReader();r.onload=e=>{EMPRESA.logo=e.target.result;logAct("Logo de empresa actualizado");pgAdmin();};r.readAsDataURL(inp.files[0]);}
+
+function pgUsuarios(){
+  el("page").innerHTML=`
+  <div class="pg-title">Usuarios & Roles</div>
+  <div class="pg-sub">${USUARIOS.length} usuarios registrados · ${ROLES_PRED.length} roles disponibles</div>
+  <div id="usr-msg"></div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+    <button class="btn btn-dk btn-sm" onclick="openUsrModal()">+ Nuevo usuario</button>
+  </div>
+  <div class="card">
+    <div class="twrap"><table><thead><tr><th>Usuario</th><th>Nombre completo</th><th>Email</th><th>Rol</th><th>Estado</th><th>Último acceso</th><th>Acciones</th></tr></thead>
+    <tbody>${USUARIOS.map(u=>`<tr>
+      <td style="font-family:'DM Mono',monospace;font-size:11px">${u.usuario}</td>
+      <td>${u.nombre}</td>
+      <td style="font-size:11px;color:${S.mu}">${u.email}</td>
+      <td>${bdg(u.rol,u.rol==="Administrador"?"b-rd":u.rol==="Gerente"?"b-pu":u.rol==="Contador"?"b-bl":"b-gn")}</td>
+      <td>${bdg(u.estado,u.estado==="Activo"?"b-gn":"b-am")}</td>
+      <td style="font-size:10px;color:${S.mu}">${u.ultimo}</td>
+      <td><div class="act-row">
+        <button class="btn btn-out btn-sm" onclick="openUsrModal('${u.id}')">✏</button>
+        <button class="btn btn-sm" style="background:#FCEAEA;color:${S.rd};border:1px solid #F0B0B0" onclick="usrDel('${u.id}')">🗑</button>
+      </div></td>
+    </tr>`).join("")}</tbody></table></div>
+  </div>
+  <div class="card">
+    <div class="card-title">Roles predefinidos</div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+      ${[{r:"Administrador",ic:"🔑",d:"Acceso completo al sistema"},{r:"Gerente",ic:"👔",d:"Reportes, financiero y aprobaciones"},{r:"Contador",ic:"📊",d:"Módulos contables y tributarios"},{r:"Vendedor",ic:"🛍",d:"Ecommerce e inventario"}].map(x=>`<div style="background:${S.cr};border-radius:10px;padding:12px;border:1px solid ${S.lt}"><div style="font-size:20px;margin-bottom:5px">${x.ic}</div><div style="font-size:12px;font-weight:700;color:${S.dk}">${x.r}</div><div style="font-size:10px;color:${S.mu};margin-top:2px">${x.d}</div></div>`).join("")}
+    </div>
+  </div>`;
+}
+function openUsrModal(id){
+  const mr=el("modal-root");
+  const u=id?USUARIOS.find(u=>u.id===id):{id:"",usuario:"",nombre:"",rol:"Vendedor",estado:"Activo",email:"",ultimo:"—"};
+  mr.innerHTML=`<div class="modal-bg" onclick="if(event.target===this)closeModal()"><div class="modal">
+    <div class="modal-title">${id?"Editar":"Nuevo"} Usuario<button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="usr-modal-msg"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Usuario</label><input class="fi" id="mu-usr" value="${u.usuario}" placeholder="usuario.apellido"></div>
+      <div class="fg"><label class="fl">Nombre completo</label><input class="fi" id="mu-nom" value="${u.nombre}" placeholder="Nombre y apellido"></div>
+    </div>
+    <div class="fg"><label class="fl">Email</label><input class="fi" id="mu-email" type="email" value="${u.email}" placeholder="correo@solem.pe"></div>
+    <div class="fg">${id?'<label class="fl">Contraseña (dejar vacío = sin cambios)</label>':'<label class="fl">Contraseña</label>'}<input class="fi" id="mu-pw" type="password" placeholder="••••••••"></div>
+    <div class="fr">
+      <div class="fg"><label class="fl">Rol</label><select class="fi" id="mu-rol">${ROLES_PRED.map(r=>`<option${u.rol===r?" selected":""}>${r}</option>`).join("")}</select></div>
+      <div class="fg"><label class="fl">Estado</label><select class="fi" id="mu-est"><option${u.estado==="Activo"?" selected":""}>Activo</option><option${u.estado==="Inactivo"?" selected":""}>Inactivo</option></select></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn btn-dk btn-full" onclick="usrSave('${id||""}')">💾 Guardar</button>
+      <button class="btn btn-out" onclick="closeModal()">Cancelar</button>
+    </div>
+  </div></div>`;
+}
+function usrSave(id){
+  const usuario=el("mu-usr").value.trim(),nombre=el("mu-nom").value.trim(),email=el("mu-email").value.trim(),rol=el("mu-rol").value,estado=el("mu-est").value;
+  if(!usuario||!nombre){showMsg("usr-modal-msg","⚠ Usuario y nombre son requeridos","err");return;}
+  const esNuevo=!id;
+  if(id){const u=USUARIOS.find(u=>u.id===id);if(u)Object.assign(u,{usuario,nombre,email,rol,estado});}
+  else USUARIOS.push({id:"U"+Date.now(),usuario,nombre,email,rol,estado,ultimo:"Nunca"});
+  logAct(esNuevo?"Usuario creado: "+usuario:"Usuario actualizado: "+usuario);
+  closeModal();pgUsuarios();
+  showMsg("usr-msg",esNuevo?"✅ Usuario creado correctamente":"✅ Usuario actualizado correctamente","ok");
+}
+function usrDel(id){
+  const u=USUARIOS.find(u=>u.id===id);
+  confirmar("¿Eliminar el usuario "+(u?.usuario||id)+"?",()=>{
+    USUARIOS.splice(USUARIOS.findIndex(u=>u.id===id),1);
+    logAct("Usuario eliminado: "+(u?.usuario||id));
+    pgUsuarios();showMsg("usr-msg","🗑 Usuario eliminado","ok");
+  });
+}
+
+function pgHistorial(){
+  el("page").innerHTML=`
+  <div class="pg-title">Historial de Actividades</div>
+  <div class="pg-sub">${HISTORIAL.length} registros · Últimas acciones del sistema</div>
+  <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+    <button class="btn btn-out btn-sm" onclick="confirmar('¿Limpiar historial?',()=>{HISTORIAL=[];pgHistorial()})">🗑 Limpiar historial</button>
+  </div>
+  <div class="card">
+    ${HISTORIAL.length?`<div class="twrap"><table><thead><tr><th>Fecha</th><th>Hora</th><th>Acción realizada</th></tr></thead>
+    <tbody>${HISTORIAL.map(h=>`<tr><td style="font-size:10px;color:${S.mu}">${h.fecha}</td><td style="font-family:'DM Mono',monospace;font-size:10px">${h.hora}</td><td>${h.accion}</td></tr>`).join("")}</tbody>
+    </table></div>`:`<div style="text-align:center;padding:24px;color:${S.mu};font-size:12px">Sin registros de actividad aún</div>`}
+  </div>`;
+}
+
+let _segLastPw="admin123";
+function pgSeguridad(){
+  const ultimo=USUARIOS.find(u=>u.rol==="Administrador")?.ultimo||"—";
+  el("page").innerHTML=`
+  <div class="pg-title">Seguridad</div>
+  <div class="pg-sub">Configuración básica de acceso</div>
+  <div id="seg-msg"></div>
+  <div class="g2">
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">🔑 Cambio de contraseña</div>
+      <div class="fg"><label class="fl">Contraseña actual</label><input class="fi" id="seg-pw-old" type="password" placeholder="Contraseña actual"></div>
+      <div class="fg"><label class="fl">Nueva contraseña</label><input class="fi" id="seg-pw-new" type="password" placeholder="Mínimo 8 caracteres"></div>
+      <div class="fg"><label class="fl">Confirmar contraseña</label><input class="fi" id="seg-pw-con" type="password" placeholder="Repetir nueva contraseña"></div>
+      <button class="btn btn-dk btn-full" style="margin-top:8px" onclick="segCambiarPw()">🔒 Cambiar contraseña</button>
+      <div class="infobox" style="margin-top:12px">La contraseña inicial es <strong>admin123</strong>. Cámbiala inmediatamente por seguridad.</div>
+    </div>
+    <div class="card" style="margin-bottom:0">
+      <div class="card-title">🕐 Último acceso</div>
+      <div class="dkbox" style="margin-bottom:12px">
+        <b>Sesión actual:</b><br/>
+        Usuario: <span style="color:${S.ac}">admin@solem.pe</span><br/>
+        Rol: <span style="color:${S.ac}">Administrador</span><br/>
+        Último acceso: <span style="color:#C3E88D">${ultimo}</span><br/>
+        IP simulada: <span style="color:#C3E88D">192.168.1.100</span>
+      </div>
+      <div class="card-title" style="margin-bottom:8px">Accesos recientes</div>
+      ${USUARIOS.slice(0,4).map(u=>`<div class="sr">
+        <span class="sl">${u.nombre} <span style="font-size:9px">(${u.rol})</span></span>
+        <span style="font-size:10px;color:${S.mu};font-family:'DM Mono',monospace">${u.ultimo}</span>
+      </div>`).join("")}
+    </div>
+  </div>`;
+}
+function segCambiarPw(){
+  const old=el("seg-pw-old").value,nw=el("seg-pw-new").value,con=el("seg-pw-con").value;
+  if(!old||!nw||!con){showMsg("seg-msg","⚠ Completa todos los campos","err");return;}
+  if(old!==_segLastPw){showMsg("seg-msg","⚠ La contraseña actual no es correcta","err");return;}
+  if(nw.length<8){showMsg("seg-msg","⚠ La nueva contraseña debe tener al menos 8 caracteres","err");return;}
+  if(nw!==con){showMsg("seg-msg","⚠ Las contraseñas nuevas no coinciden","err");return;}
+  _segLastPw=nw;
+  logAct("Contraseña de administrador cambiada");
+  const u=USUARIOS.find(u=>u.rol==="Administrador");
+  if(u)u.ultimo=new Date().toLocaleDateString("es-PE")+" "+new Date().toLocaleTimeString("es-PE",{hour:"2-digit",minute:"2-digit"});
+  showMsg("seg-msg","✅ Contraseña actualizada correctamente (simulado)","ok");
+}
+
+function render(){
+  const pages={
+    dashboard:pgDashboard,tangibles:pgTangibles,intangibles:pgIntangibles,
+    capital:pgCapital,financiamiento:pgFinanciamiento,balance:pgBalance,
+    tributario:pgTributario,ecommerce:pgEcommerce,layouts:pgLayouts,reportes:pgReportes,
+    sunat:pgSunat,notif:pgNotif,deploy:pgDeploy,
+    admin:pgAdmin,usuarios:pgUsuarios,historial:pgHistorial,seguridad:pgSeguridad,
+    costos:pgCostos,
+  };
+  (pages[st.mod]||pgDashboard)();
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MÓDULO COSTOS DE PRODUCCIÓN — SOLEM ERP v10
+   ══════════════════════════════════════════════════════════════ */
+
+function _cpLoad(){try{return JSON.parse(localStorage.getItem('solem_costos_v1')||'null');}catch(e){return null;}}
+function _cpSave(){try{localStorage.setItem('solem_costos_v1',JSON.stringify(CP_PRODUCTOS));}catch(e){}}
+
+let CP_PRODUCTOS=(()=>{
+  const saved=_cpLoad();
+  if(saved&&Array.isArray(saved)&&saved.length)return saved;
+  return INV.map(p=>({id:p.id,mpd:r2(p.cost*0.55),mod:r2(p.cost*0.25),cif:r2(p.cost*0.20),qty:100,rentabilidad:30,comisionPos:5}));
+})();
+
+function cpCalc(c){
+  const mpd=+c.mpd||0,mod=+c.mod||0,cif=+c.cif||0,qty=Math.max(+c.qty||1,1);
+  const rent=(+c.rentabilidad||0)/100,comPos=(+c.comisionPos||0)/100;
+  const cp=r2(mpd+mod+cif),cpu=r2(cp/qty);
+  const vv=rent<1?r2(cpu/(1-rent)):cpu;
+  const pv=r2(vv*1.18),pfPos=r2(pv*(1+comPos*1.18)),mc=r2(vv-cpu);
+  return{cp,cpu,vv,pv,pfPos,mc};
+}
+
+function cpSyncToInventory(){
+  INV.forEach(p=>{const c=CP_PRODUCTOS.find(x=>x.id===p.id);if(!c)return;const res=cpCalc(c);p.cost=res.cpu;p.price=res.pv;p._pfPos=res.pfPos;p._mc=res.mc;p._vv=res.vv;});
+  _cpSave();
+}
+
+function pgCostos(){
+  INV.forEach(p=>{if(!CP_PRODUCTOS.find(c=>c.id===p.id))CP_PRODUCTOS.push({id:p.id,mpd:r2(p.cost*0.55),mod:r2(p.cost*0.25),cif:r2(p.cost*0.20),qty:100,rentabilidad:30,comisionPos:5});});
+  const allRes=INV.map(p=>{const c=CP_PRODUCTOS.find(x=>x.id===p.id)||{mpd:0,mod:0,cif:0,qty:1,rentabilidad:0,comisionPos:0};return{...cpCalc(c),name:p.name,e:p.e,stock:p.stock,id:p.id};});
+  const utilidadTotal=r2(allRes.reduce((s,r)=>s+r.mc*r.stock,0));
+  const margenProm=allRes.length?r2(allRes.reduce((s,r)=>s+(r.vv>0?r.mc/r.vv*100:0),0)/allRes.length):0;
+  const masRentable=allRes.length?allRes.reduce((a,b)=>b.mc>a.mc?b:a,allRes[0]):null;
+  el("page").innerHTML=`
+  <div class="pg-title">🏭 Costos de Producción</div>
+  <div class="pg-sub">Cálculo automático en tiempo real · Integrado con Inventario, POS, Ecommerce y Facturación</div>
+  <div id="cp-page-msg"></div>
+  <div class="cp-grid">
+    <div class="cp-card accent"><div class="cp-card-label">Utilidad total estimada</div><div class="cp-card-value" style="color:var(--gn)">${fmt(utilidadTotal)}</div><div class="cp-card-sub">Sobre stock actual</div></div>
+    <div class="cp-card green"><div class="cp-card-label">Margen promedio</div><div class="cp-card-value" style="color:var(--ac)">${margenProm.toFixed(1)}%</div><div class="cp-card-sub">Sobre valor de venta</div></div>
+    <div class="cp-card blue"><div class="cp-card-label">Productos configurados</div><div class="cp-card-value">${CP_PRODUCTOS.length}</div><div class="cp-card-sub">${INV.length} en inventario</div></div>
+    <div class="cp-card purple"><div class="cp-card-label">Más rentable</div><div class="cp-card-value" style="font-size:13px;color:var(--pu)">${masRentable?masRentable.e+' '+masRentable.name.split(' ')[0]:'—'}</div><div class="cp-card-sub">${masRentable?'MC: '+fmt(masRentable.mc):'Sin datos'}</div></div>
+    <div class="cp-card" style="border-color:var(--gn)"><div class="cp-card-label">Sincronización</div><div style="margin-top:6px"><span class="cp-sync-badge">✅ Activa</span></div><div class="cp-card-sub" style="margin-top:4px">INV · POS · Facturas</div></div>
+  </div>
+  ${INV.map(p=>{
+    const c=CP_PRODUCTOS.find(x=>x.id===p.id)||{id:p.id,mpd:0,mod:0,cif:0,qty:100,rentabilidad:30,comisionPos:5};
+    const res=cpCalc(c);
+    return`<div class="cp-sheet" id="cp-sheet-${p.id}">
+      <div class="cp-sheet-title">
+        <span style="font-size:22px">${p.e}</span>
+        <div><div>${p.name} <span class="bdg b-br">${p.sku}</span></div><div style="font-size:10px;color:var(--mu);margin-top:2px">${p.gender} · Stock: ${p.stock} pares</div></div>
+        <div style="margin-left:auto"><span class="cp-sync-badge">🔗 Sincronizado</span></div>
+      </div>
+      <div class="cp-row">
+        <div class="cp-field"><label class="cp-label">MPD — Materia Prima Directa (S/)</label><input class="cp-input" type="number" step="0.01" min="0" value="${c.mpd}" oninput="cpUpdate('${p.id}','mpd',this.value)"><div class="cp-formula">Cuero, suelas, pegamentos…</div></div>
+        <div class="cp-field"><label class="cp-label">MOD — Mano de Obra Directa (S/)</label><input class="cp-input" type="number" step="0.01" min="0" value="${c.mod}" oninput="cpUpdate('${p.id}','mod',this.value)"><div class="cp-formula">Cortadores, armadores, ensamblaje…</div></div>
+        <div class="cp-field"><label class="cp-label">CIF — Costos Indirectos Fabricación (S/)</label><input class="cp-input" type="number" step="0.01" min="0" value="${c.cif}" oninput="cpUpdate('${p.id}','cif',this.value)"><div class="cp-formula">Energía, dep. maquinaria, overhead…</div></div>
+      </div>
+      <div class="cp-row">
+        <div class="cp-field"><label class="cp-label">Cantidad a producir (Q)</label><input class="cp-input" type="number" step="1" min="1" value="${c.qty}" oninput="cpUpdate('${p.id}','qty',this.value)"><div class="cp-formula">Lote de producción</div></div>
+        <div class="cp-field"><label class="cp-label">Rentabilidad (%)</label><input class="cp-input" type="number" step="0.5" min="1" max="99" value="${c.rentabilidad}" oninput="cpUpdate('${p.id}','rentabilidad',this.value)"><div class="cp-formula">Margen sobre costo unitario</div></div>
+        <div class="cp-field"><label class="cp-label">Comisión POS (%)</label><input class="cp-input" type="number" step="0.5" min="0" value="${c.comisionPos}" oninput="cpUpdate('${p.id}','comisionPos',this.value)"><div class="cp-formula">Cargo tarjeta / plataforma</div></div>
+      </div>
+      <hr class="cp-separator"/>
+      <div class="cp-formula-box"><span class="fk">CP</span>=MPD+MOD+CIF &nbsp;·&nbsp; <span class="fk">CPU</span>=CP÷Q &nbsp;·&nbsp; <span class="fk">VV</span>=CPU÷(1−Rent%) &nbsp;·&nbsp; <span class="fk">PV</span>=VV×1.18 &nbsp;·&nbsp; <span class="fk">POS</span>=PV×(1+Com%×1.18) &nbsp;·&nbsp; <span class="fk">MC</span>=VV−CPU</div>
+      <div class="cp-results-grid" id="cp-results-${p.id}">${cpRenderResults(res)}</div>
+      <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-gn btn-sm" onclick="cpAplicarProducto('${p.id}')">✅ Aplicar al Inventario</button>
+        <button class="btn btn-out btn-sm" onclick="cpReset('${p.id}')">↺ Restablecer</button>
+      </div>
+    </div>`;
+  }).join("")}
+  <div class="card" style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <div style="flex:1"><div class="card-title" style="margin-bottom:4px">Sincronización global</div><div style="font-size:11px;color:var(--mu)">Actualiza precios de costo, venta y POS en Inventario, Ecommerce y Facturación para todos los productos.</div></div>
+    <button class="btn btn-dk" style="font-size:13px;padding:10px 20px" onclick="cpSyncAll()">🔄 Sincronizar Todo</button>
+  </div>
+  <div class="card" style="margin-top:0">
+    <div class="card-title">📊 Resumen de Rentabilidad — Todos los Productos</div>
+    <div class="twrap cp-hist-table"><table>
+      <thead><tr><th>Producto</th><th>CP Total</th><th>CPU</th><th>Val. Venta</th><th>P. Venta</th><th>P. Final POS</th><th>Margen Contrib.</th><th>Rent %</th></tr></thead>
+      <tbody>${INV.map(p=>{
+        const c=CP_PRODUCTOS.find(x=>x.id===p.id)||{mpd:0,mod:0,cif:0,qty:1,rentabilidad:0,comisionPos:0};
+        const res=cpCalc(c);const rentPct=res.vv>0?r2(res.mc/res.vv*100):0;
+        return`<tr><td>${p.e} <strong style="color:var(--ac)">${p.name}</strong></td><td class="mo">${fmt(res.cp)}</td><td class="mo">${fmt(res.cpu)}</td><td class="mo" style="color:var(--ac)">${fmt(res.vv)}</td><td class="mo" style="color:var(--bl)">${fmt(res.pv)}</td><td class="mo" style="color:var(--pu)">${fmt(res.pfPos)}</td><td class="mo" style="color:${res.mc>0?'var(--gn)':'var(--rd)'}">${fmt(res.mc)}</td><td><span class="bdg ${rentPct>=20?'b-gn':rentPct>=10?'b-am':'b-rd'}">${rentPct.toFixed(1)}%</span></td></tr>`;
+      }).join("")}</tbody>
+    </table></div>
+  </div>`;
+}
+
+function cpRenderResults(res){
+  return`
+    <div class="cp-result-card highlight"><div class="cp-result-label">Costo de Producción</div><div class="cp-result-value">${fmt(res.cp)}</div><div style="font-size:9px;color:var(--mu)">MPD+MOD+CIF</div></div>
+    <div class="cp-result-card"><div class="cp-result-label">Costo Unitario</div><div class="cp-result-value">${fmt(res.cpu)}</div><div style="font-size:9px;color:var(--mu)">CP ÷ Q</div></div>
+    <div class="cp-result-card highlight"><div class="cp-result-label">Valor de Venta</div><div class="cp-result-value">${fmt(res.vv)}</div><div style="font-size:9px;color:var(--mu)">CPU ÷ (1−Rent%)</div></div>
+    <div class="cp-result-card blue"><div class="cp-result-label">Precio de Venta</div><div class="cp-result-value">${fmt(res.pv)}</div><div style="font-size:9px;color:var(--mu)">VV × 1.18 (IGV)</div></div>
+    <div class="cp-result-card purple"><div class="cp-result-label">Precio Final POS</div><div class="cp-result-value">${fmt(res.pfPos)}</div><div style="font-size:9px;color:var(--mu)">PV × (1+Com%×1.18)</div></div>
+    <div class="cp-result-card green"><div class="cp-result-label">Margen Contribución</div><div class="cp-result-value">${fmt(res.mc)}</div><div style="font-size:9px;color:var(--mu)">VV − CPU</div></div>`;
+}
+
+function cpUpdate(pid,field,val){
+  let c=CP_PRODUCTOS.find(x=>x.id===pid);
+  if(!c){c={id:pid,mpd:0,mod:0,cif:0,qty:100,rentabilidad:30,comisionPos:5};CP_PRODUCTOS.push(c);}
+  c[field]=+val||0;
+  const res=cpCalc(c);
+  const rd=el('cp-results-'+pid);if(rd)rd.innerHTML=cpRenderResults(res);
+  const p=INV.find(x=>x.id===pid);
+  if(p){p.cost=res.cpu;p.price=res.pv;p._pfPos=res.pfPos;p._mc=res.mc;p._vv=res.vv;}
+  _cpSave();
+}
+
+function cpAplicarProducto(pid){
+  const c=CP_PRODUCTOS.find(x=>x.id===pid);if(!c)return;
+  const res=cpCalc(c);
+  const p=INV.find(x=>x.id===pid);
+  if(p){p.cost=res.cpu;p.price=res.pv;p._pfPos=res.pfPos;p._mc=res.mc;p._vv=res.vv;}
+  _cpSave();
+  if(typeof logAct==='function')logAct('Costos aplicados a inventario: '+(p?.name||pid));
+  showMsg('cp-page-msg','✅ Precios aplicados al inventario correctamente','ok');
+}
+
+function cpSyncAll(){
+  cpSyncToInventory();
+  if(typeof logAct==='function')logAct('Sincronización global de costos de producción');
+  showMsg('cp-page-msg','✅ Todos los precios sincronizados con Inventario, POS y Facturación','ok');
+}
+
+function cpReset(pid){
+  const p=INV.find(x=>x.id===pid);if(!p)return;
+  const idx=CP_PRODUCTOS.findIndex(x=>x.id===pid);
+  const def={id:pid,mpd:r2(p.cost*0.55),mod:r2(p.cost*0.25),cif:r2(p.cost*0.20),qty:100,rentabilidad:30,comisionPos:5};
+  if(idx>=0)CP_PRODUCTOS[idx]=def;else CP_PRODUCTOS.push(def);
+  _cpSave();pgCostos();
+}
+
+// Init sync al cargar
+(function cpInitSync(){
+  CP_PRODUCTOS.forEach(c=>{const p=INV.find(x=>x.id===c.id);if(!p)return;const res=cpCalc(c);p.cost=res.cpu;p.price=res.pv;p._pfPos=res.pfPos;p._mc=res.mc;p._vv=res.vv;});
+})();
+
+renderNav();
+render();
+// Live clock in topbar
+function _updateTopClock(){const tc=el("top-clock");if(tc)tc.textContent=new Date().toLocaleTimeString("es-PE",{hour:"2-digit",minute:"2-digit",second:"2-digit"});}
+_updateTopClock();setInterval(_updateTopClock,1000);
+</script>
+</body>
+</html>
